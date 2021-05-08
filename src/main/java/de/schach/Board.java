@@ -12,12 +12,6 @@ public class Board
         loadFromFen( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" );
     }
 
-    public static boolean[] getPossibleMoves()
-    {
-
-        return null;
-    }
-
     public void reset()
     {
         board = new byte[8 * 8];
@@ -122,22 +116,31 @@ public class Board
                 }
             }
         }
+        return false;
     }
 
-    public PieceColor whatColorIsPieceAt(PieceColor enemyColor, int x, int y){
-        if(this.getPiece(x, y)==null){
+    public PieceColor whatColorIsPieceAt( PieceColor enemyColor, int x, int y )
+    {
+        if ( this.getPiece( x, y ) == null )
+        {
             return null;
-        } else {
-            if(getPiece(x, y).getColor() == PieceColor.WHITE){
+        }
+        else
+        {
+            if ( getPiece( x, y ).getColor() == PieceColor.WHITE )
+            {
                 return PieceColor.WHITE;
-            } else {
+            }
+            else
+            {
                 return PieceColor.BLACK;
             }
         }
     }
 
 
-    public static boolean[] getPossibleMoves() {
+    public static boolean[] getPossibleMoves()
+    {
         return null;
     }
 
