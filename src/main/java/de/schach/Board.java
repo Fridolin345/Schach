@@ -12,6 +12,12 @@ public class Board
         loadFromFen( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" );
     }
 
+    public static boolean[] getPossibleMoves()
+    {
+
+        return null;
+    }
+
     public void reset()
     {
         board = new byte[8 * 8];
@@ -34,20 +40,20 @@ public class Board
         {
             scanner = new Scanner( rank );
             scanner.useDelimiter( "\\r*" );
-            if ( scanner.hasNext( "\\w" ) ) //letter
-            {
-                char pieceToken = scanner.next().charAt( 0 );
-                PieceType type = PieceType.fromChar( Character.toLowerCase( pieceToken ) );
-                PieceColor color = Character.isUpperCase( pieceToken ) ? PieceColor.WHITE : PieceColor.BLACK;
-                board[currentField++] = Piece.fromPartialData( type, color ).toByte();
-            }
-            else if ( scanner.hasNext( "\\d" ) ) //number
+            if ( scanner.hasNext( "\\d" ) ) //number
             {
                 int amount = scanner.nextInt();
                 for ( int i = 0; i < amount; i++ )
                 {
                     board[currentField++] = 0;
                 }
+            }
+            else if ( scanner.hasNext( "\\w" ) ) //letter
+            {
+                char pieceToken = scanner.next().charAt( 0 );
+                PieceType type = PieceType.fromChar( Character.toLowerCase( pieceToken ) );
+                PieceColor color = Character.isUpperCase( pieceToken ) ? PieceColor.WHITE : PieceColor.BLACK;
+                board[currentField++] = Piece.fromPartialData( type, color ).toByte();
             }
             else
             {
@@ -71,7 +77,7 @@ public class Board
 
     public void setPiece( int row, int colum, Piece piece )
     {
-        board[row * 8 + colum] = piece == null ? -1 : piece.toByte();
+        board[row * 8 + colum] = piece == null ? 0 : piece.toByte();
     }
 
     public List<Position> getPositions( Piece piece )
@@ -88,11 +94,14 @@ public class Board
         return positions;
     }
 
-
-    public boolean canMoveTo(Piece piece, int startX, int startY, int wishX, int wishY){ //noch nicht fertig
-        if(piece.getPieceType()==PieceType.PAWN){
-            if(piece.getColor()==PieceColor.WHITE){
-                if(startY==wishY){
+    public boolean canMoveTo( Piece piece, int startX, int startY, int wishX, int wishY )
+    {
+        if ( piece.getPieceType() == PieceType.PAWN )
+        {
+            if ( piece.getColor() == PieceColor.WHITE )
+            {
+                if ( startY == wishY )
+                {
 
                 }
             }

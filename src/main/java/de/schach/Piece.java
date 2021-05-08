@@ -21,10 +21,6 @@ public enum Piece
     BPAWN( 11, PieceType.PAWN, BLACK );
 
 
-    private int spriteIndex;
-    private PieceType pieceType;
-    private PieceColor colorByte; //0b0001 = w / 0b0000 = b
-
     private static Map<Byte, Piece> pieces;
 
     static
@@ -36,11 +32,37 @@ public enum Piece
         }
     }
 
+    private int spriteIndex;
+    private PieceType pieceType;
+    private PieceColor colorByte; //0b0001 = w / 0b0000 = b
+
     Piece( int spriteIndex, PieceType pieceType, PieceColor colorByte )
     {
         this.pieceType = pieceType;
         this.spriteIndex = spriteIndex;
         this.colorByte = colorByte;
+    }
+
+    public static Piece fromPartialData( PieceType pieceType, PieceColor color )
+    {
+        for ( Piece piece : values() )
+        {
+            if ( piece.colorByte == color && piece.pieceType == pieceType )
+            {
+                return piece;
+            }
+        }
+        return null;
+    }
+
+    public static PieceColor getColor( byte pieceData )
+    {
+        return ( pieceData & WHITE.getValue() ) == WHITE.getValue() ? WHITE : BLACK;
+    }
+
+    public static Piece fromByte( byte pieceData )
+    {
+        return pieces.get( pieceData );
     }
 
     public PieceType getPieceType()
@@ -66,27 +88,6 @@ public enum Piece
     public int getSpriteIndex()
     {
         return spriteIndex;
-    }
-
-    public static Piece fromPartialData( PieceType pieceType, PieceColor color )
-    {
-        for ( Piece piece : values() )
-        {
-            if ( piece.colorByte == color && piece.pieceType == pieceType )
-            {
-                return piece;
-            }
-        }
-        return null;
-    }
-
-    public static PieceColor getColor(byte pieceData) {
-        return (pieceData & WHITE.getValue()) == WHITE.getValue() ? WHITE : BLACK;
-    }
-
-    public static Piece fromByte( byte pieceData )
-    {
-        return pieces.get( pieceData );
     }
 
 
