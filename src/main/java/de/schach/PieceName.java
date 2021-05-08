@@ -1,0 +1,5 @@
+package de.schach;
+
+public enum PieceName {
+	WKING, WQUEEN, WROCK, WBISHOP, WKNIGHT, WPAWN, BKING, BQUEEN, BROCK, BBISHOP, BKNIGHT, BPAWN
+}
