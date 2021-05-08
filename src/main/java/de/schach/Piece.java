@@ -52,6 +52,11 @@ public enum Piece
         return colorByte.getValue();
     }
 
+    public PieceColor getColor()
+    {
+        return colorByte;
+    }
+
     public byte toByte()
     {
         return (byte) ( getPieceType().getRepresentative() & getColorByte() );
@@ -60,6 +65,18 @@ public enum Piece
     public int getSpriteIndex()
     {
         return spriteIndex;
+    }
+
+    public static Piece fromPartialData( PieceType pieceType, PieceColor color )
+    {
+        for ( Piece piece : values() )
+        {
+            if ( piece.colorByte == color && piece.pieceType == pieceType )
+            {
+                return piece;
+            }
+        }
+        return null;
     }
 
     public static PieceColor getColor( byte pieceData )

@@ -29,6 +29,16 @@ public enum PieceType
         return representative;
     }
 
+    public static PieceType fromChar( char fenData )
+    {
+        for ( PieceType type : values() )
+        {
+            if ( type.fenChar == fenData )
+                return type;
+        }
+        return null;
+    }
+
     public static PieceType fromByte( byte data )
     {
         for ( PieceType type : values() )

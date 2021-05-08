@@ -37,10 +37,17 @@ public class Board
             if ( scanner.hasNext( "\\w" ) ) //letter
             {
                 char pieceToken = scanner.next().charAt( 0 );
+                PieceType type = PieceType.fromChar( Character.toLowerCase( pieceToken ) );
+                PieceColor color = Character.isUpperCase( pieceToken ) ? PieceColor.WHITE : PieceColor.BLACK;
+                board[currentField] = Piece.fromPartialData( type, color ).toByte();
             }
             else if ( scanner.hasNext( "\\d" ) ) //number
             {
-                int digit = scanner.nextInt();
+                int amount = scanner.nextInt();
+                for(int i=0;i<amount;i++)
+                {
+
+                }
             }
             else
             {
