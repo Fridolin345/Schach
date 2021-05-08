@@ -3,7 +3,7 @@ package de.schach;
 public enum PieceColor
 {
 
-    WHITE( (byte) 0b0001 ),
+    WHITE( (byte) 0b1000 ),
     BLACK( (byte) 0b0000 );
 
     private byte value;
