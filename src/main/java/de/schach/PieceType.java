@@ -1,27 +1,27 @@
 package de.schach;
 
-/**
- * <h1>Schach</h1>
- *
- * @author Julius Korweck
- * @version 08.05.2021
- * @since 08.05.2021
- */
 public enum PieceType
 {
 
-    KING( 0 ),
-    QUEEN( 1 ),
-    ROCK( 2 ),
-    BISHOP( 3 ),
-    KNIGHT( 4 ),
-    PAWN( 5 );
+    KING( 0, 'k' ),
+    QUEEN( 1, 'q' ),
+    BISHOP( 3, 'b' ),
+    KNIGHT( 4, 'n' ),
+    ROCK( 2, 'r' ),
+    PAWN( 5, 'p' );
 
-    private byte representative;
+    private final byte representative;
+    private final char fenChar;
 
-    PieceType( int representative )
+    PieceType( int representative, char fenChar )
     {
         this.representative = (byte) representative;
+        this.fenChar = fenChar;
+    }
+
+    public char getFenChar()
+    {
+        return fenChar;
     }
 
     public byte getRepresentative()
@@ -40,9 +40,3 @@ public enum PieceType
     }
 
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/

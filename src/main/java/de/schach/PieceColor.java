@@ -1,13 +1,6 @@
 package de.schach;
 
-/**
- * <h1>Schach</h1>
- *
- * @author Julius Korweck
- * @version 08.05.2021
- * @since 08.05.2021
- */
-enum PieceColor
+public enum PieceColor
 {
 
     WHITE( (byte) 0b0001 ),
@@ -26,9 +19,3 @@ enum PieceColor
     }
 
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/

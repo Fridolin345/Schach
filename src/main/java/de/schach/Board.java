@@ -23,7 +23,7 @@ public class Board
 
         String[] ranks = squares.split( "/" );
 
-        //TODO
+
 
     }
 
