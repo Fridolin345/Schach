@@ -63,26 +63,21 @@ public class Board
 
     }
 
-    public Piece getPiece( int row, int colum )
+    public Piece getPiece( Position position )
     {
-        byte pieceData = board[row * 8 + colum];
+        byte pieceData = board[position.getBoardPosition()];
         System.out.println();
         return Piece.fromByte( pieceData );
     }
 
-    public boolean isPieceAt( int row, int column )
+    public boolean isPieceAt( Position position )
     {
-        return board[row * 8 + column] != 0;
+        return board[position.getBoardPosition()] != 0;
     }
 
-    public Piece getPiece( Position position )
+    public void setPiece( Position position, Piece piece )
     {
-        return getPiece( position.getRow(), position.getColumn() );
-    }
-
-    public void setPiece( int row, int colum, Piece piece )
-    {
-        board[row * 8 + colum] = piece == null ? 0 : piece.toByte();
+        board[position.getBoardPosition()] = piece == null ? 0 : piece.toByte();
     }
 
     public List<Position> getPositions( Piece piece )
@@ -93,46 +88,43 @@ public class Board
             for ( int col = 0; col < 8; col++ )
             {
                 if ( Piece.fromByte( board[row * 8 + col] ) == piece )
-                    positions.add( new Position( row, col ) );
+                    positions.add( Position.ofBoard( row, col ) );
             }
         }
         return positions;
     }
 
-    public boolean canMoveTo( Piece piece, int startX, int startY, int wishX, int wishY )
+    public boolean canMoveTo( Piece piece, Position start, Position wish )
     {
         if ( piece.getPieceType() == PieceType.PAWN )
         {
             if ( piece.getColor() == PieceColor.WHITE )
             {
-                if ( startY == wishY )
-                {
 
-                }
             }
         }
 
         return false;
     }
 
-    public boolean nothingBetween( int startX, int startY, int endX, int endY )
+    public boolean isNothingBetween( Position start, Position end )
     { //noch nicht fertig
-        if ( startX == endX )
+        if ( start.getColumn() == end.getColumn() )
         {
-            for ( int i = startY; i == endY; i++ )
+            for ( int row = start.getRow(); row == end.getRow(); row++ )
             {
-                if ( this.getPiece( startX, i ) != null )
+                if ( isPieceAt( Position.ofBoard( row, start.getColumn() ) ) )
                 {
                     return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
-    public PieceColor pieceColorAt( int row, int column )
+    public PieceColor pieceColorAt( Position position )
     {
-        return isPieceAt( row, column ) ? null : getPiece( row, column ).getColor();
+        return isPieceAt( position ) ? null : getPiece( position ).getColor();
     }
 
     public static boolean[] getPossibleMoves()

@@ -1,7 +1,7 @@
 package de.schach;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public enum PieceType
 {
@@ -15,8 +15,8 @@ public enum PieceType
 
     private final byte representative;
     private final char fenChar;
-    private boolean onlyOneStep;
-    private Vector[] baseMoveVectors; //Nur eine Richtung | Nur Basis-Vektoren
+    private final boolean onlyOneStep;
+    private final Vector[] baseMoveVectors; //Nur eine Richtung | Nur Basis-Vektoren
 
     PieceType( int representative, char fenChar, boolean onlyOneStep, Vector... baseMoveVectors )
     {
@@ -56,9 +56,9 @@ public enum PieceType
         return representative;
     }
 
-    public List<Position> getAllPossibleMoves( Position position, int opponentRow )
+    public Set<Position> getAllPossibleMoves( Position position, int opponentRow )
     {
-        List<Position> positions = new LinkedList<>();
+        Set<Position> positions = new HashSet<>();
         if ( this == PAWN )
         {
             int rowDiff = position.getRow() - opponentRow;
