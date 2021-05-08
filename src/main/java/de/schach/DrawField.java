@@ -46,7 +46,7 @@ public class DrawField extends JPanel{
 		
 		ArrayList<Integer[]> myDrawBoard = ChessGame.mainBoard.PrepareToDraw();
 		
-		for(Integer[] piece : myDrawBoard){
+		for(Integer[] piece : myDrawBoard) {
 			g.drawImage(imgs[piece[0]], piece[1]*64, piece[2]*64, this);
 		}
 	}

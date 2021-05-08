@@ -12,5 +12,4 @@ public class ChessGame {
 		System.out.println(mainBoard.getAt('a', 1));
 		new GUI();
 	}
-		
 }
