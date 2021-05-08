@@ -9,7 +9,7 @@ public class Board
 
     public Board()
     {
-        reset();
+        loadFromFen( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" );
     }
 
     public void reset()
@@ -24,7 +24,7 @@ public class Board
         String squares = fen.substring( 0, fen.indexOf( ' ' ) );
         String data = fen.substring( fen.indexOf( ' ' ) + 1 );
 
-        String[] settings = data.split( " " ); //TODO later
+        String[] settings = data.split( " " ); //TODO later, just skip it currently
 
         String[] ranks = squares.split( "/" );
 
@@ -39,14 +39,14 @@ public class Board
                 char pieceToken = scanner.next().charAt( 0 );
                 PieceType type = PieceType.fromChar( Character.toLowerCase( pieceToken ) );
                 PieceColor color = Character.isUpperCase( pieceToken ) ? PieceColor.WHITE : PieceColor.BLACK;
-                board[currentField] = Piece.fromPartialData( type, color ).toByte();
+                board[currentField++] = Piece.fromPartialData( type, color ).toByte();
             }
             else if ( scanner.hasNext( "\\d" ) ) //number
             {
                 int amount = scanner.nextInt();
-                for(int i=0;i<amount;i++)
+                for ( int i = 0; i < amount; i++ )
                 {
-
+                    board[currentField++] = 0;
                 }
             }
             else

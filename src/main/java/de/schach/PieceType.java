@@ -3,12 +3,12 @@ package de.schach;
 public enum PieceType
 {
 
-    KING( 0, 'k' ),
-    QUEEN( 1, 'q' ),
+    KING( 1, 'k' ),
+    QUEEN( 2, 'q' ),
     BISHOP( 3, 'b' ),
     KNIGHT( 4, 'n' ),
-    ROCK( 2, 'r' ),
-    PAWN( 5, 'p' );
+    ROCK( 5, 'r' ),
+    PAWN( 6, 'p' );
 
     private final byte representative;
     private final char fenChar;
