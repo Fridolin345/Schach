@@ -103,15 +103,10 @@ public class Board
 
         return false;
     }
-
-    public boolean nothingBetween( int startX, int startY, int endX, int endY )
-    {
-        if ( startX == endX )
-        {
-            for ( int i = startY; i == endY; i++ )
-            {
-                if ( this.getPiece( startX, i ) != null )
-                {
+    public boolean nothingBetween(int startX, int startY, int endX, int endY){ //noch nicht fertig
+        if(startX == endX){
+            for(int i = startY; i==endY; i++){
+                if(this.getPiece(startX, i) != null){
                     return false;
                 }
             }
@@ -119,28 +114,20 @@ public class Board
         return false;
     }
 
-    public PieceColor whatColorIsPieceAt( PieceColor enemyColor, int x, int y )
-    {
-        if ( this.getPiece( x, y ) == null )
-        {
+    public PieceColor whatColorIsPieceAt(int x, int y){
+        if(this.getPiece(x, y)==null){
             return null;
-        }
-        else
-        {
-            if ( getPiece( x, y ).getColor() == PieceColor.WHITE )
-            {
+        } else {
+            if(getPiece(x, y).getColor() == PieceColor.WHITE){
                 return PieceColor.WHITE;
-            }
-            else
-            {
+            } else {
                 return PieceColor.BLACK;
             }
         }
     }
 
 
-    public static boolean[] getPossibleMoves()
-    {
+    public static boolean[] getPossibleMoves() {
         return null;
     }
 
