@@ -50,11 +50,15 @@ public class Board
 
     }
 
-    //Beginnend bei 0/0 links oben auf dem Feld
     public Piece getPiece( int row, int colum )
     {
         byte pieceData = board[row * 8 + colum];
         return Piece.fromByte( pieceData );
+    }
+
+    public Piece getPiece( Position position )
+    {
+        return getPiece( position.getRow(), position.getColumn() );
     }
 
     public void setPiece( int row, int colum, Piece piece )
