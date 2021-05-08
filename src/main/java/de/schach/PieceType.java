@@ -19,16 +19,6 @@ public enum PieceType
         this.fenChar = fenChar;
     }
 
-    public char getFenChar()
-    {
-        return fenChar;
-    }
-
-    public byte getRepresentative()
-    {
-        return representative;
-    }
-
     public static PieceType fromChar( char fenData )
     {
         for ( PieceType type : values() )
@@ -47,6 +37,16 @@ public enum PieceType
                 return type;
         }
         return null;
+    }
+
+    public char getFenChar()
+    {
+        return fenChar;
+    }
+
+    public byte getRepresentative()
+    {
+        return representative;
     }
 
 }
