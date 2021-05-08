@@ -109,19 +109,23 @@ public class Board
             }
         }
     }
-    public boolean enemyPieceAt(PieceColor enemyColor, int x, int y){
+
+    public PieceColor whatColorIsPieceAt(PieceColor enemyColor, int x, int y){
         if(this.getPiece(x, y)==null){
-            return false;
+            return null;
         } else {
-            if(getPiece(x, y).getColor() == PieceColor.WHITE && PieceColor.WHITE == enemyColor){
-                return true;
+            if(getPiece(x, y).getColor() == PieceColor.WHITE){
+                return PieceColor.WHITE;
+            } else {
+                return PieceColor.BLACK;
             }
         }
     }
-}
+
 
     public static boolean[] getPossibleMoves() {
-
+        return null;
+    }
 
 
 }
