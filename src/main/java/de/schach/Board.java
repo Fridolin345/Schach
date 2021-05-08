@@ -12,11 +12,6 @@ public class Board
         loadFromFen( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" );
     }
 
-    public static boolean[] getPossibleMoves()
-    {
-
-        return null;
-    }
 
     public void reset()
     {
