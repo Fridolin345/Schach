@@ -5,17 +5,64 @@ import java.util.*;
 public class Board
 {
 
+    private static Board instance = new Board();
+
+    public static Board getInstance()
+    {
+        return instance;
+    }
+
     private byte[] board;
 
-    public Board()
+    private Board()
     {
         loadFromFen( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" );
-        System.out.println( Arrays.toString( board ) );
     }
 
     public void reset()
     {
         board = new byte[8 * 8];
+    }
+
+    public void setBoard( byte[] board )
+    {
+        this.board = board;
+    }
+
+    public Piece getPiece( Position position )
+    {
+        byte pieceData = board[position.getBoardPosition()];
+        System.out.println();
+        return Piece.fromByte( pieceData );
+    }
+
+    public boolean isPieceAt( Position position )
+    {
+        return board[position.getBoardPosition()] != 0;
+    }
+
+    public void setPiece( Position position, Piece piece )
+    {
+        board[position.getBoardPosition()] = piece == null ? 0 : piece.toByte();
+    }
+
+    public List<Position> getPositions( Piece piece )
+    {
+        List<Position> positions = new LinkedList<>();
+        for ( int row = 0; row < 8; row++ )
+        {
+            for ( int col = 0; col < 8; col++ )
+            {
+                if ( Piece.fromByte( board[row * 8 + col] ) == piece )
+                    positions.add( Position.ofBoard( row, col ) );
+            }
+        }
+        return positions;
+    }
+
+    public PieceColor pieceColorAt( Position position )
+    {
+        return isPieceAt( position ) ? null : getPiece( position ).getColor();
     }
 
     public void loadFromFen( String fen )
@@ -62,75 +109,5 @@ public class Board
         }
 
     }
-
-    public Piece getPiece( Position position )
-    {
-        byte pieceData = board[position.getBoardPosition()];
-        System.out.println();
-        return Piece.fromByte( pieceData );
-    }
-
-    public boolean isPieceAt( Position position )
-    {
-        return board[position.getBoardPosition()] != 0;
-    }
-
-    public void setPiece( Position position, Piece piece )
-    {
-        board[position.getBoardPosition()] = piece == null ? 0 : piece.toByte();
-    }
-
-    public List<Position> getPositions( Piece piece )
-    {
-        List<Position> positions = new LinkedList<>();
-        for ( int row = 0; row < 8; row++ )
-        {
-            for ( int col = 0; col < 8; col++ )
-            {
-                if ( Piece.fromByte( board[row * 8 + col] ) == piece )
-                    positions.add( Position.ofBoard( row, col ) );
-            }
-        }
-        return positions;
-    }
-
-    public boolean canMoveTo( Piece piece, Position start, Position wish )
-    {
-        if ( piece.getPieceType() == PieceType.PAWN )
-        {
-            if ( piece.getColor() == PieceColor.WHITE )
-            {
-
-            }
-        }
-
-        return false;
-    }
-
-    public boolean isNothingBetween( Position start, Position end )
-    { //noch nicht fertig
-        if ( start.getColumn() == end.getColumn() )
-        {
-            for ( int row = start.getRow(); row == end.getRow(); row++ )
-            {
-                if ( isPieceAt( Position.ofBoard( row, start.getColumn() ) ) )
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public PieceColor pieceColorAt( Position position )
-    {
-        return isPieceAt( position ) ? null : getPiece( position ).getColor();
-    }
-
-    public static boolean[] getPossibleMoves()
-    {
-        return null;
-    }
-
 
 }
