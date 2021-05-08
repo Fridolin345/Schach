@@ -10,8 +10,8 @@ public class ChessGame
 
     public static void main( String[] args ) throws IOException
     {
-        mainBoard.startstellung();
-        System.out.println( mainBoard.getAt( 'a', 1 ) );
+
+        //System.out.println( mainBoard.getAt( 'a', 1 ) );
         new GUI();
     }
 }

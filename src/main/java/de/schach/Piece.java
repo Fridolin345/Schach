@@ -20,6 +20,7 @@ public enum Piece
     BROCK( 10, PieceType.ROCK, BLACK ),
     BPAWN( 11, PieceType.PAWN, BLACK );
 
+
     private int spriteIndex;
     private PieceType pieceType;
     private PieceColor colorByte; //0b0001 = w / 0b0000 = b
@@ -79,14 +80,14 @@ public enum Piece
         return null;
     }
 
-    public static PieceColor getColor( byte pieceData )
-    {
-        return ( pieceData & WHITE.getValue() ) == WHITE.getValue() ? WHITE : BLACK;
+    public static PieceColor getColor(byte pieceData) {
+        return (pieceData & WHITE.getValue()) == WHITE.getValue() ? WHITE : BLACK;
     }
 
     public static Piece fromByte( byte pieceData )
     {
         return pieces.get( pieceData );
     }
+
 
 }

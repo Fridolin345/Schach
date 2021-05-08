@@ -60,6 +60,7 @@ public class Board
     public Piece getPiece( int row, int colum )
     {
         byte pieceData = board[row * 8 + colum];
+        System.out.println();
         return Piece.fromByte( pieceData );
     }
 
@@ -73,7 +74,7 @@ public class Board
         board[row * 8 + colum] = piece == null ? -1 : piece.toByte();
     }
 
-    public List<Position> getPosition( Piece piece )
+    public List<Position> getPositions( Piece piece )
     {
         List<Position> positions = new LinkedList<>();
         for ( int row = 0; row < 8; row++ )
@@ -86,5 +87,41 @@ public class Board
         }
         return positions;
     }
+
+
+    public boolean canMoveTo(Piece piece, int startX, int startY, int wishX, int wishY){
+        if(piece.getPieceType()==PieceType.PAWN){
+            if(piece.getColor()==PieceColor.WHITE){
+                if(startY==wishY){
+
+                }
+            }
+        }
+
+        return false;
+    }
+    public boolean nothingBetween(int startX, int startY, int endX, int endY){
+        if(startX == endX){
+            for(int i = startY; i==endY; i++){
+                if(this.getPiece(startX, i) != null){
+                    return false;
+                }
+            }
+        }
+    }
+    public boolean enemyPieceAt(PieceColor enemyColor, int x, int y){
+        if(this.getPiece(x, y)==null){
+            return false;
+        } else {
+            if(getPiece(x, y).getColor() == PieceColor.WHITE && PieceColor.WHITE == enemyColor){
+                return true;
+            }
+        }
+    }
+}
+
+    public static boolean[] getPossibleMoves() {
+
+
 
 }
