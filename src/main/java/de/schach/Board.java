@@ -10,6 +10,7 @@ public class Board
     public Board()
     {
         loadFromFen( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" );
+        System.out.println( Arrays.toString( board ) );
     }
 
     public void reset()
@@ -34,24 +35,29 @@ public class Board
         {
             scanner = new Scanner( rank );
             scanner.useDelimiter( "\\r*" );
-            if ( scanner.hasNext( "\\d" ) ) //number
+            while ( scanner.hasNext() )
             {
-                int amount = scanner.nextInt();
-                for ( int i = 0; i < amount; i++ )
+                if ( scanner.hasNext( "\\d" ) ) //number
                 {
-                    board[currentField++] = 0;
+                    int amount = scanner.nextInt();
+                    for ( int i = 0; i < amount; i++ )
+                    {
+                        board[currentField++] = 0;
+                    }
                 }
-            }
-            else if ( scanner.hasNext( "\\w" ) ) //letter
-            {
-                char pieceToken = scanner.next().charAt( 0 );
-                PieceType type = PieceType.fromChar( Character.toLowerCase( pieceToken ) );
-                PieceColor color = Character.isUpperCase( pieceToken ) ? PieceColor.WHITE : PieceColor.BLACK;
-                board[currentField++] = Piece.fromPartialData( type, color ).toByte();
-            }
-            else
-            {
-                throw new FenSyntaxException( "Invalid rank in FEN string: \"" + rank + "\"; cant read \"" + scanner.next() + "\"" );
+                else if ( scanner.hasNext( "\\w" ) ) //letter
+                {
+                    char pieceToken = scanner.next().charAt( 0 );
+                    PieceType type = PieceType.fromChar( Character.toLowerCase( pieceToken ) );
+                    PieceColor color = Character.isUpperCase( pieceToken ) ? PieceColor.WHITE : PieceColor.BLACK;
+                    Piece piece = Piece.fromPartialData( type, color );
+                    board[currentField++] = piece.toByte();
+                    System.out.println("placed " + piece.name());
+                }
+                else
+                {
+                    throw new FenSyntaxException( "Invalid rank in FEN string: \"" + rank + "\"; cant read \"" + scanner.next() + "\"" );
+                }
             }
         }
 
@@ -103,10 +109,15 @@ public class Board
 
         return false;
     }
-    public boolean nothingBetween(int startX, int startY, int endX, int endY){ //noch nicht fertig
-        if(startX == endX){
-            for(int i = startY; i==endY; i++){
-                if(this.getPiece(startX, i) != null){
+
+    public boolean nothingBetween( int startX, int startY, int endX, int endY )
+    { //noch nicht fertig
+        if ( startX == endX )
+        {
+            for ( int i = startY; i == endY; i++ )
+            {
+                if ( this.getPiece( startX, i ) != null )
+                {
                     return false;
                 }
             }
@@ -114,20 +125,28 @@ public class Board
         return false;
     }
 
-    public PieceColor whatColorIsPieceAt(int x, int y){
-        if(this.getPiece(x, y)==null){
+    public PieceColor whatColorIsPieceAt( int x, int y )
+    {
+        if ( this.getPiece( x, y ) == null )
+        {
             return null;
-        } else {
-            if(getPiece(x, y).getColor() == PieceColor.WHITE){
+        }
+        else
+        {
+            if ( getPiece( x, y ).getColor() == PieceColor.WHITE )
+            {
                 return PieceColor.WHITE;
-            } else {
+            }
+            else
+            {
                 return PieceColor.BLACK;
             }
         }
     }
 
 
-    public static boolean[] getPossibleMoves() {
+    public static boolean[] getPossibleMoves()
+    {
         return null;
     }
 

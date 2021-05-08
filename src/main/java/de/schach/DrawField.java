@@ -116,7 +116,7 @@ public class DrawField extends JPanel
                 }
                 if ( ChessGame.mainBoard.getPiece( drawX, drawY ) != null )
                 {
-                    g.drawImage( imgs[ChessGame.mainBoard.getPiece( drawX, drawY ).getSpriteIndex()], ( drawX + 1 ) * 64, ( drawY + 1 ) * 64, this );
+                    g.drawImage( imgs[ChessGame.mainBoard.getPiece( drawX, drawY ).getSpriteIndex()], drawX * 64,drawY * 64, this );
                 }
             }
         }

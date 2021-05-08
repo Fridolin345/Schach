@@ -82,7 +82,7 @@ public enum Piece
 
     public byte toByte()
     {
-        return (byte) ( getPieceType().getRepresentative() & getColorByte() );
+        return (byte) ( getPieceType().getRepresentative() | getColorByte() );
     }
 
     public int getSpriteIndex()
