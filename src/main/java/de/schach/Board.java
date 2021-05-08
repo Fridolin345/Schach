@@ -89,7 +89,7 @@ public class Board
     }
 
 
-    public boolean canMoveTo(Piece piece, int startX, int startY, int wishX, int wishY){
+    public boolean canMoveTo(Piece piece, int startX, int startY, int wishX, int wishY){ //noch nicht fertig
         if(piece.getPieceType()==PieceType.PAWN){
             if(piece.getColor()==PieceColor.WHITE){
                 if(startY==wishY){
@@ -100,7 +100,7 @@ public class Board
 
         return false;
     }
-    public boolean nothingBetween(int startX, int startY, int endX, int endY){
+    public boolean nothingBetween(int startX, int startY, int endX, int endY){ //noch nicht fertig
         if(startX == endX){
             for(int i = startY; i==endY; i++){
                 if(this.getPiece(startX, i) != null){
@@ -110,7 +110,7 @@ public class Board
         }
     }
 
-    public PieceColor whatColorIsPieceAt(PieceColor enemyColor, int x, int y){
+    public PieceColor whatColorIsPieceAt(int x, int y){
         if(this.getPiece(x, y)==null){
             return null;
         } else {
