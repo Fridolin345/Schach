@@ -52,7 +52,7 @@ public class Board
                     PieceColor color = Character.isUpperCase( pieceToken ) ? PieceColor.WHITE : PieceColor.BLACK;
                     Piece piece = Piece.fromPartialData( type, color );
                     board[currentField++] = piece.toByte();
-                    System.out.println("placed " + piece.name());
+                    System.out.println( "placed " + piece.name() );
                 }
                 else
                 {
@@ -68,6 +68,11 @@ public class Board
         byte pieceData = board[row * 8 + colum];
         System.out.println();
         return Piece.fromByte( pieceData );
+    }
+
+    public boolean isPieceAt( int row, int column )
+    {
+        return board[row * 8 + column] != 0;
     }
 
     public Piece getPiece( Position position )
@@ -125,25 +130,10 @@ public class Board
         return false;
     }
 
-    public PieceColor whatColorIsPieceAt( int x, int y )
+    public PieceColor pieceColorAt( int row, int column )
     {
-        if ( this.getPiece( x, y ) == null )
-        {
-            return null;
-        }
-        else
-        {
-            if ( getPiece( x, y ).getColor() == PieceColor.WHITE )
-            {
-                return PieceColor.WHITE;
-            }
-            else
-            {
-                return PieceColor.BLACK;
-            }
-        }
+        return isPieceAt( row, column ) ? null : getPiece( row, column ).getColor();
     }
-
 
     public static boolean[] getPossibleMoves()
     {

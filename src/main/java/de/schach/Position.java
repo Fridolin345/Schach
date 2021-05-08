@@ -1,12 +1,8 @@
 package de.schach;
 
-/**
- * <h1>Schach</h1>
- *
- * @author Julius Korweck
- * @version 08.05.2021
- * @since 08.05.2021
- */
+import lombok.ToString;
+
+@ToString
 public class Position
 {
 
@@ -29,10 +25,14 @@ public class Position
         return row;
     }
 
-}
+    public Position move( Vector vector )
+    {
+        return new Position( row + vector.getY(), column + vector.getX() );
+    }
 
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/
+    public boolean isValidOnBoard()
+    {
+        return row >= 0 && column >= 0 && row < 8 && column < 8;
+    }
+
+}

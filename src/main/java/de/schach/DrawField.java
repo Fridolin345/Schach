@@ -31,7 +31,7 @@ public class DrawField extends JPanel
         public void mousePressed( MouseEvent e )
         {
 
-            System.out.println( GetField( (int) ( e.getX() / 64 ), (int) ( e.getY() ) / 64 ) );
+            //System.out.println( GetField( (int) ( e.getX() / 64 ), (int) ( e.getY() ) / 64 ) );
         }
 
         @Override
@@ -114,9 +114,9 @@ public class DrawField extends JPanel
                     drawX = 7 - i;
                     drawY = j;
                 }
-                if ( ChessGame.mainBoard.getPiece( drawX, drawY ) != null )
+                if ( ChessGame.getMainBoard().getPiece( drawX, drawY ) != null )
                 {
-                    g.drawImage( imgs[ChessGame.mainBoard.getPiece( drawX, drawY ).getSpriteIndex()], drawX * 64,drawY * 64, this );
+                    g.drawImage( imgs[ChessGame.getMainBoard().getPiece( drawX, drawY ).getSpriteIndex()], drawX * 64, drawY * 64, this );
                 }
             }
         }
@@ -130,26 +130,12 @@ public class DrawField extends JPanel
 
     private Point GetField( int drawX, int drawY )
     {
-        if ( isWhiteOnBot )
-        {
-            return new Point( drawX, 7 - drawY );
-        }
-        else
-        {
-            return new Point( 7 - drawX, drawY );
-        }
+        return isWhiteOnBot ? new Point( drawX, 7 - drawY ) : new Point( 7 - drawX, drawY );
     }
 
 
     private Point TransformToField( int drawX, int drawY )
     {
-        if ( isWhiteOnBot )
-        {
-            return new Point( drawX, drawY + 7 );
-        }
-        else
-        {
-            return new Point( 7 - drawX, drawY );
-        }
+        return isWhiteOnBot ? new Point( drawX, drawY + 7 ) : new Point( 7 - drawX, drawY );
     }
 }
