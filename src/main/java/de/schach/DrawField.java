@@ -14,7 +14,7 @@ public class DrawField extends JPanel
 
 //	static LinkedList<de.schach.Piece> ps=new LinkedList<>();
 
-    BufferedImage all = ImageIO.read( new File( "C:\\Users\\dempf\\Downloads\\chess.png" ) );
+    BufferedImage all = ImageIO.read( new File( "assets\\chess.png" ) );
     Image imgs[] = new Image[12];
     int ind = 0;
 
