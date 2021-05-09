@@ -16,8 +16,10 @@ public class DrawField extends JPanel
 
     public static final Color WHITE_FIELD_COLOR = new Color( 235, 235, 208 );
     public static final Color BLACK_FIELD_COLOR = new Color( 119, 148, 85 );
+    public static final Color HIGHLIGHTED_FIELD_COLOR = new Color( 250, 200, 15 );
 
     private boolean isWhiteOnBot = true;
+    private Position highlighted = null;
 
     private BufferedImage spritesheet = ImageIO.read( new File( "assets\\chess.png" ) );
     private Image sprites[] = new Image[12];
@@ -53,6 +55,8 @@ public class DrawField extends JPanel
     public void fieldClicked( Position position, Optional<Piece> piece )
     {
         System.out.println( position + " -> " + piece.map( Enum::name ).orElse( "EMPTY FIELD" ) );
+        highlighted = position;
+        repaint();
     }
 
     public void setWhiteOnBot( boolean whiteOnBot )
@@ -75,6 +79,8 @@ public class DrawField extends JPanel
             for ( int x = 0; x < 8; x++ )
             {
                 g.setColor( white ? WHITE_FIELD_COLOR : BLACK_FIELD_COLOR );
+                if ( highlighted != null && highlighted.getScreenX() == x && highlighted.getScreenY() == y )
+                    g.setColor( HIGHLIGHTED_FIELD_COLOR );
                 g.fillRect( x * 64, y * 64, 64, 64 );
                 white = !white;
             }
