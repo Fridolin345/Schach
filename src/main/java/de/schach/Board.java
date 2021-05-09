@@ -19,6 +19,11 @@ public class Board
         loadFromFen( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" );
     }
 
+    private Board( byte[] board )
+    {
+        this.board = board;
+    }
+
     public void reset()
     {
         board = new byte[8 * 8];
@@ -27,6 +32,11 @@ public class Board
     public void setBoard( byte[] board )
     {
         this.board = board;
+    }
+
+    public Board getInvertedCopy()
+    {
+        return new Board( ArrayUtil.rowFlippedBoard( this.board ) );
     }
 
     public Piece getPiece( Position position )

@@ -2,6 +2,8 @@ package de.schach;
 
 import lombok.ToString;
 
+import java.util.function.Consumer;
+
 @ToString
 public class Position
 {
@@ -58,6 +60,19 @@ public class Position
     public boolean isValidOnBoard()
     {
         return row >= 0 && column >= 0 && row < 8 && column < 8;
+    }
+
+    public void iterateTo( Position position, Consumer<Position> forEach )
+    {
+        int toRow = Math.max( this.row, position.getRow() );
+        int toColumn = Math.max( this.column, position.getColumn() );
+        for ( int row = Math.min( this.row, position.getRow() ); row < toRow; row++ )
+        {
+            for ( int col = Math.min( this.column, position.getColumn() ); col < toColumn; col++ )
+            {
+                forEach.accept( Position.ofBoard( row, col ) );
+            }
+        }
     }
 
     @Override

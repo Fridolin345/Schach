@@ -3,11 +3,11 @@ package de.schach;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 
@@ -17,69 +17,57 @@ public class DrawField extends JPanel
     public static final Color WHITE_FIELD_COLOR = new Color( 235, 235, 208 );
     public static final Color BLACK_FIELD_COLOR = new Color( 119, 148, 85 );
 
-    boolean isWhiteOnBot = false;
+    private boolean isWhiteOnBot = true;
 
-//	static LinkedList<de.schach.Piece> ps=new LinkedList<>();
-
-    BufferedImage all = ImageIO.read( new File( "assets\\chess.png" ) );
-    Image imgs[] = new Image[12];
-    int ind = 0;
-    MouseListener m = new MouseListener()
+    private BufferedImage spritesheet = ImageIO.read( new File( "assets\\chess.png" ) );
+    private Image sprites[] = new Image[12];
+    private MouseListener mouse = new MouseAdapter()
     {
-        @Override
-        public void mouseClicked( MouseEvent e )
-        {
-        }
-
         @Override
         public void mousePressed( MouseEvent e )
         {
-
-            //System.out.println( GetField( (int) ( e.getX() / 64 ), (int) ( e.getY() ) / 64 ) );
-        }
-
-        @Override
-        public void mouseReleased( MouseEvent e )
-        {
-
-        }
-
-        @Override
-        public void mouseEntered( MouseEvent e )
-        {
-
-        }
-
-        @Override
-        public void mouseExited( MouseEvent e )
-        {
-
+            Position position = Position.ofScreen( e.getX() / 64, e.getY() / 64 );
+            fieldClicked( position, Optional.ofNullable( getBoard().getPiece( position ) ) );
         }
     };
 
     public DrawField() throws IOException
     {
+        int ind = 0;
         for ( int y = 0; y < 400; y += 200 )
-        {   //Hier wird das Bild in die einzelnen Figuren unterst�ckelt
+        {   //Hier wird das Bild in die einzelnen Figuren unterstückelt
             for ( int x = 0; x < 1200; x += 200 )
             {
-                imgs[ind] = all.getSubimage( x, y, 200, 200 ).getScaledInstance( 64, 64, BufferedImage.SCALE_SMOOTH );
+                sprites[ind] = spritesheet.getSubimage( x, y, 200, 200 ).getScaledInstance( 64, 64, BufferedImage.SCALE_SMOOTH );
                 ind++;
             }
         }
-        this.addMouseListener( m );
+        this.addMouseListener( mouse );
+    }
+
+    public Board getBoard()
+    {
+        return isWhiteOnBot ? Board.getInstance() : Board.getInstance().getInvertedCopy();
+    }
+
+    public void fieldClicked( Position position, Optional<Piece> piece )
+    {
+        System.out.println( position + " -> " + piece.map( Enum::name ).orElse( "EMPTY FIELD" ) );
+    }
+
+    public void setWhiteOnBot( boolean whiteOnBot )
+    {
+        isWhiteOnBot = whiteOnBot;
     }
 
     public void paint( Graphics g )
     {
-        //Schachfelder (schwarz/weiß) zeichnen
-        Graphics2D g2 = (Graphics2D) g;
-        drawBoard( g );
-        drawFigures( g );
-
+        Graphics2D graphics2D = (Graphics2D) g;
+        drawBoard( graphics2D );
+        drawFigures( graphics2D );
     }
 
-    private void drawBoard( Graphics g )
+    private void drawBoard( Graphics2D g )
     {
         boolean white = isWhiteOnBot;
         for ( int y = 0; y < 8; y++ )
@@ -94,32 +82,24 @@ public class DrawField extends JPanel
         }
     }
 
-    private void drawFigures( Graphics g )
+    private void drawFigures( Graphics2D g )
     {
         //Figuren zeichnen:
         forEachCell( pos ->
         {
-            if ( Board.getInstance().isPieceAt( pos ) )
+            if ( getBoard().isPieceAt( pos ) )
             {
-                g.drawImage( imgs[Board.getInstance().getPiece( pos ).getSpriteIndex()], pos.getScreenX() * 64, pos.getScreenY() * 64, this );
+                Image img = sprites[getBoard().getPiece( pos ).getSpriteIndex()];
+                g.drawImage( img, pos.getScreenX() * 64, pos.getScreenY() * 64, this );
             }
         } );
     }
 
     private void forEachCell( Consumer<Position> forEach )
     {
-        for ( int i = 0; i < 8; i++ )
-        {
-            for ( int j = 0; j < 8; j++ )
-            {
-                forEach.accept( invertPlayingSide( Position.ofScreen( i, j ) ) );
-            }
-        }
-    }
-
-    private Position invertPlayingSide( Position position )
-    {
-        return isWhiteOnBot ? Position.ofScreen( position.getScreenX(), 7 - position.getScreenY() ) : Position.ofScreen( position.getScreenX(), position.getScreenY() );
+        Position start = Position.ofScreen( 0, 0 );
+        Position end = Position.ofScreen( 8, 8 );
+        start.iterateTo( end, forEach );
     }
 
 }
