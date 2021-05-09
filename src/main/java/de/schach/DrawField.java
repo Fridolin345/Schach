@@ -8,10 +8,14 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 
 public class DrawField extends JPanel
 {
+
+    public static final Color WHITE_FIELD_COLOR = new Color( 235, 235, 208 );
+    public static final Color BLACK_FIELD_COLOR = new Color( 119, 148, 85 );
 
     boolean isWhiteOnBot = false;
 
@@ -53,7 +57,6 @@ public class DrawField extends JPanel
         }
     };
 
-
     public DrawField() throws IOException
     {
         for ( int y = 0; y < 400; y += 200 )
@@ -71,72 +74,52 @@ public class DrawField extends JPanel
     {
         //Schachfelder (schwarz/weiß) zeichnen
         Graphics2D g2 = (Graphics2D) g;
-        boolean white;
-        if ( isWhiteOnBot )
-        {
-            white = true;
-        }
-        else
-        {
-            white = false;
-        }
+        drawBoard( g );
+        drawFigures( g );
+
+    }
+
+    private void drawBoard( Graphics g )
+    {
+        boolean white = isWhiteOnBot;
         for ( int y = 0; y < 8; y++ )
-        { //
+        {
             for ( int x = 0; x < 8; x++ )
             {
-                if ( white )
-                {
-                    g.setColor( new Color( 235, 235, 208 ) );
-                }
-                else
-                {
-                    g.setColor( new Color( 119, 148, 85 ) );
-                }
+                g.setColor( white ? WHITE_FIELD_COLOR : BLACK_FIELD_COLOR );
                 g.fillRect( x * 64, y * 64, 64, 64 );
                 white = !white;
             }
             white = !white;
         }
+    }
 
+    private void drawFigures( Graphics g )
+    {
         //Figuren zeichnen:
+        forEachCell( pos ->
+        {
+            if ( Board.getInstance().isPieceAt( pos ) )
+            {
+                g.drawImage( imgs[Board.getInstance().getPiece( pos ).getSpriteIndex()], pos.getScreenX() * 64, pos.getScreenY() * 64, this );
+            }
+        } );
+    }
+
+    private void forEachCell( Consumer<Position> forEach )
+    {
         for ( int i = 0; i < 8; i++ )
         {
             for ( int j = 0; j < 8; j++ )
             {
-                int drawX, drawY;
-                if ( isWhiteOnBot )
-                {
-                    drawX = i;
-                    drawY = j + 7;
-                }
-                else
-                {
-                    drawX = 7 - i;
-                    drawY = j;
-                }
-                Position position = Position.ofScreen( drawX, drawY );
-                if ( Board.getInstance().isPieceAt( position ) )
-                {
-                    g.drawImage( imgs[Board.getInstance().getPiece( position ).getSpriteIndex()], drawX * 64, drawY * 64, this );
-                }
+                forEach.accept( invertPlayingSide( Position.ofScreen( i, j ) ) );
             }
         }
-        //ArrayList<Integer[]> myDrawBoard = ChessGame.mainBoard.PrepareToDraw();
-
-        //for ( Integer[] piece : myDrawBoard )
-        //{
-        //g.drawImage( imgs[piece[0]], piece[1] * 64, piece[2] * 64, this ); //NOCH FALSCH
-        //}
     }
 
-    private Point GetField( int drawX, int drawY )
+    private Position invertPlayingSide( Position position )
     {
-        return isWhiteOnBot ? new Point( drawX, 7 - drawY ) : new Point( 7 - drawX, drawY );
+        return isWhiteOnBot ? Position.ofScreen( position.getScreenX(), 7 - position.getScreenY() ) : Position.ofScreen( position.getScreenX(), position.getScreenY() );
     }
 
-
-    private Point TransformToField( int drawX, int drawY )
-    {
-        return isWhiteOnBot ? new Point( drawX, drawY + 7 ) : new Point( 7 - drawX, drawY );
-    }
 }
