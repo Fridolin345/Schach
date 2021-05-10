@@ -99,6 +99,11 @@ public class DrawField extends JPanel
         Board.getInstance().movePiece( isWhiteOnBot ? from : from.inverted(), to );
     }
 
+    public Vector getOffensiveDirection( PieceColor color )
+    {
+        return isWhiteOnBot == (color == PieceColor.WHITE) ? new Vector( 0, -1 ) : new Vector( 0, 1 );
+    }
+
     public void drawPossibleMoves( Position position, Board board )
     {
 
