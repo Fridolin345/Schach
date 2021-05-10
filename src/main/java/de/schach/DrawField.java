@@ -186,7 +186,7 @@ public class DrawField extends JPanel
     private void forEachCell( Consumer<Position> forEach )
     {
         Position start = Position.ofScreen( 0, 0 );
-        Position end = Position.ofScreen( 8, 8 );
+        Position end = Position.ofScreen( 7, 7 );
         start.iterateTo( end, forEach );
     }
 

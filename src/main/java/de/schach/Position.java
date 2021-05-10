@@ -62,6 +62,8 @@ public class Position
         return Position.ofBoard( 7 - row, column );
     }
 
+
+
     public boolean isValidOnBoard()
     {
         return row >= 0 && column >= 0 && row < 8 && column < 8;
@@ -71,9 +73,9 @@ public class Position
     {
         int toRow = Math.max( this.row, position.getRow() );
         int toColumn = Math.max( this.column, position.getColumn() );
-        for ( int row = Math.min( this.row, position.getRow() ); row < toRow; row++ )
+        for ( int row = Math.min( this.row, position.getRow() ); row <= toRow; row++ )
         {
-            for ( int col = Math.min( this.column, position.getColumn() ); col < toColumn; col++ )
+            for ( int col = Math.min( this.column, position.getColumn() ); col <= toColumn; col++ )
             {
                 forEach.accept( Position.ofBoard( row, col ) );
             }
