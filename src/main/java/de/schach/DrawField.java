@@ -7,7 +7,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 
@@ -33,6 +33,10 @@ public class DrawField extends JPanel
         }
     };
 
+    private static boolean[] possMovesField = new boolean[8*8];
+    RenderingHints hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    private static Position moveStartpos = null;
+
     public DrawField() throws IOException
     {
         int ind = 0;
@@ -56,8 +60,31 @@ public class DrawField extends JPanel
     {
         System.out.println( position + " -> " + piece.map( Enum::name ).orElse( "EMPTY FIELD" ) );
         highlighted = position;
+
+
+        if(getBoard().isPieceAt(position)){
+            Set<Position> pMoves = new HashSet<>();
+            //pMoves = board.getPiece(position).getPieceType().getAllPossibleMoves(position, board);
+            pMoves.removeAll(pMoves);
+            pMoves.add(new Position(position.getRow()-1, position.getColumn()));
+
+            moveStartpos = position;
+            for(int i = 0; i<possMovesField.length; i++){
+                possMovesField[i] = false;
+            }
+            for(Position p : pMoves){
+                possMovesField[p.getRow()*8+p.getColumn()] = true;
+            }
+        } else if(possMovesField[position.getRow()*8+position.getColumn()]){
+            getBoard().
+        }
         repaint();
     }
+
+    public void drawPossibleMoves(Position position, Board board){
+
+    }
+
 
     public void setWhiteOnBot( boolean whiteOnBot )
     {
@@ -69,6 +96,7 @@ public class DrawField extends JPanel
         Graphics2D graphics2D = (Graphics2D) g;
         drawBoard( graphics2D );
         drawFigures( graphics2D );
+        drawPossibleMoves( graphics2D );
     }
 
     private void drawBoard( Graphics2D g )
@@ -99,6 +127,22 @@ public class DrawField extends JPanel
                 g.drawImage( img, pos.getScreenX() * 64, pos.getScreenY() * 64, this );
             }
         } );
+    }
+
+    private void drawPossibleMoves(Graphics2D g)
+    {
+        if(moveStartpos!=null) { //Methode muss nur wenn nötig aufgerufen werden... eigentlich
+            for (int row=0; row<8; row++) {
+                for(int col = 0; col<8; col++) {
+                    if(possMovesField[row*8+col]) {
+                        g.setRenderingHints(hints);
+                        g.setStroke(new BasicStroke(5));
+                        g.setColor(new Color(100, 100, 100, 150));
+                        g.drawOval(col * 64, row * 64, 64, 64);
+                    }
+                }
+            }
+        }
     }
 
     private void forEachCell( Consumer<Position> forEach )

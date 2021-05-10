@@ -4,7 +4,6 @@ import java.util.*;
 
 public class Board
 {
-
     private static Board instance = new Board();
 
     public static Board getInstance()
@@ -39,21 +38,22 @@ public class Board
         return new Board( ArrayUtil.rowFlippedBoard( this.board ) );
     }
 
-    public Piece getPiece( Position position )
+
+    public Piece getPiece( int row, int colum )
     {
-        byte pieceData = board[position.getBoardPosition()];
+        byte pieceData = board[row * 8 + colum];
         System.out.println();
         return Piece.fromByte( pieceData );
     }
 
-    public boolean isPieceAt( Position position )
+    public Piece getPiece( Position position )
     {
-        return board[position.getBoardPosition()] != 0;
+        return getPiece( position.getRow(), position.getColumn() );
     }
 
-    public void setPiece( Position position, Piece piece )
+    public void setPiece( int row, int colum, Piece piece )
     {
-        board[position.getBoardPosition()] = piece == null ? 0 : piece.toByte();
+        board[row * 8 + colum] = piece == null ? 0 : piece.toByte();
     }
 
     public List<Position> getPositions( Piece piece )
@@ -64,10 +64,20 @@ public class Board
             for ( int col = 0; col < 8; col++ )
             {
                 if ( Piece.fromByte( board[row * 8 + col] ) == piece )
-                    positions.add( Position.ofBoard( row, col ) );
+                    positions.add( new Position( row, col ) );
             }
         }
         return positions;
+    }
+
+    public boolean isPieceAt( Position position )
+    {
+        return board[position.getBoardPosition()] != 0;
+    }
+
+    public void setPiece( Position position, Piece piece )
+    {
+        board[position.getBoardPosition()] = piece == null ? 0 : piece.toByte();
     }
 
     public PieceColor pieceColorAt( Position position )
@@ -120,4 +130,12 @@ public class Board
 
     }
 
+    public void move(int startRow, int startCol, int endRow, int endCol){
+
+    }
+
+    public void removePieceAt(int row, int col){
+        board[row*8+col] = 0;
+
+    }
 }
