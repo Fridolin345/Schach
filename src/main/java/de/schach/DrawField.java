@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public class DrawField extends JPanel
 {
-
+    //Boardvariables
     public static final Color WHITE_FIELD_COLOR = new Color( 235, 235, 208 );
     public static final Color BLACK_FIELD_COLOR = new Color( 119, 148, 85 );
     public static final Color HIGHLIGHTED_FIELD_COLOR = new Color( 250, 200, 15 );
@@ -21,44 +21,9 @@ public class DrawField extends JPanel
     private boolean isWhiteOnBot = true;
     private Position highlighted = null;
 
+    //chess Piece-images
     private BufferedImage spritesheet = ImageIO.read( new File( "assets\\chess.png" ) );
     private Image sprites[] = new Image[12];
-    private MouseListener mouse = new MouseAdapter()
-    {
-        @Override
-        public void mousePressed( MouseEvent e )
-        {
-            position = Position.ofScreen( e.getX() / 64, e.getY() / 64 );
-            imageCorner.setLocation( position.getScreenX() * 64, position.getScreenY() * 64 );
-            previousPoint = e.getPoint();
-            mouseIsPressed = true;
-
-            fieldClicked( position ); //, Optional.ofNullable( getBoard().getPiece( position ) ) );
-
-            repaint();
-            System.out.println( "ok" );
-        }
-
-        @Override
-        public void mouseReleased( MouseEvent e )
-        {
-            position = Position.ofScreen( e.getX() / 64, e.getY() / 64 );
-            if ( possMovesField[position.getRow() * 8 + position.getColumn()] ) //Kann auf ausgewähltes Feld fahren
-            {
-                move( moveStartpos, position );
-                for ( int i = 0; i < possMovesField.length; i++ )
-                {
-                    possMovesField[i] = false;
-                }
-                moveStartpos = null;
-                repaint();
-            }
-            mouseIsPressed = false;
-            repaint();
-        }
-
-    };
-
 
     //Piece moving
     private static boolean[] possMovesField = new boolean[8 * 8];
@@ -67,9 +32,10 @@ public class DrawField extends JPanel
     Position position;
 
     //Drag and Drop
-    Point imageCorner = new Point(0, 0);                            //Bildecke
-    Point previousPoint = new Point(0, 0);                    //letzter Mauszeigerpunkt
+    Point imageCorner = new Point( 0, 0 );                            //Bildecke
+    Point previousPoint = new Point( 0, 0 );                    //letzter Mauszeigerpunkt
     boolean mouseIsPressed;
+
 
 
     public DrawField() throws IOException
@@ -84,9 +50,8 @@ public class DrawField extends JPanel
             }
         }
         this.addMouseListener( mouse );
-        //Drag and Drop:
         DragListener dragListener = new DragListener();
-        this.addMouseMotionListener( dragListener );        //während der verschiebung
+        this.addMouseMotionListener( dragListener );
     }
 
     public Board getBoard()
@@ -222,17 +187,24 @@ public class DrawField extends JPanel
 
     private void drawPossibleMoves( Graphics2D g )
     {
-        if ( moveStartpos != null )
-        { //Methode muss nur wenn nötig aufgerufen werden... eigentlich
-            for ( int row = 0; row < 8; row++ )
+        if ( moveStartpos != null ) //Methode nur aufrufen, wenn Figur ausgewählt wurde
+        {
+            for ( int row = 0; row < 8; row++ ) //Jedes Feld durchgehen
             {
                 for ( int col = 0; col < 8; col++ )
                 {
                     if ( possMovesField[row * 8 + col] )
                     {
-                        g.setRenderingHints( hints );
-                        g.setStroke( new BasicStroke( 5 ) );
-                        g.setColor( new Color( 100, 100, 100, 150 ) );
+                        g.setRenderingHints( hints ); //Damit Kreise nicht kacke aussehen
+                        g.setStroke( new BasicStroke( 5 ) ); //Linienbreite
+                        if ( getBoard().isPieceAt( new Position( row, col ) ) ) //Wenn Figur geschlagen werden kann
+                        {
+                            g.setColor( new Color( 255, 50, 50, 150 ) ); //dann roter kreis
+                        }
+                        else
+                        {
+                            g.setColor( new Color( 100, 100, 100, 150 ) ); //sonst grauer Kreis
+                        }
                         g.drawOval( col * 64, row * 64, 64, 64 );
                     }
                 }
@@ -249,28 +221,57 @@ public class DrawField extends JPanel
 
 
     //Drag and Drop
-
-
     private class DragListener extends MouseMotionAdapter
     {
-
         public void mouseDragged( MouseEvent e )
         {
             if ( mouseIsPressed )
             {
-                System.out.println( "ok " + e.getPoint() );
-                System.out.println( position );
-
                 Point currentPt = e.getPoint();
                 imageCorner.translate(
-                        (int) ( currentPt.getX() - previousPoint.getX() ),
-                        (int) ( currentPt.getY() - previousPoint.getY() ) );
-                previousPoint = currentPt;
+                        (int) ( currentPt.getX() - previousPoint.getX() ),    //Mausverschiebung auf
+                        (int) ( currentPt.getY() - previousPoint.getY() ) ); //Figurenverschiebung übertragen
+                previousPoint = currentPt; //Beide Variablen um Mausverschiebung zu messen
                 repaint();
 
             }
         }
     }
 
+    //Beide Arten von Figurenbewegung
+    private MouseListener mouse = new MouseAdapter()
+    {
+        @Override
+        public void mousePressed( MouseEvent e )
+        {
+            position = Position.ofScreen( e.getX() / 64, e.getY() / 64 ); //Startfeld
+            imageCorner.setLocation( position.getScreenX() * 64, position.getScreenY() * 64 );
+            previousPoint = e.getPoint(); //Letzter Mauspunkt (initatiolisierung)
+            mouseIsPressed = true; //wenn der Nutzer die Maus gedrückt hält
+
+            fieldClicked( position ); //, Optional.ofNullable( getBoard().getPiece( position ) ) );
+
+            repaint();
+        }
+
+        @Override
+        public void mouseReleased( MouseEvent e )
+        {
+            position = Position.ofScreen( e.getX() / 64, e.getY() / 64 );
+            if ( possMovesField[position.getRow() * 8 + position.getColumn()] ) //Wenn sich feld geändert hat
+            {
+                move( moveStartpos, position ); //dann -wenn möglich- auf neues feld ziehen
+                for ( int i = 0; i < possMovesField.length; i++ ) //und possible Moves reseten
+                {
+                    possMovesField[i] = false;
+                }
+                moveStartpos = null;
+                repaint();
+            }
+            mouseIsPressed = false;
+            repaint();
+        }
+
+    };
 
 }
