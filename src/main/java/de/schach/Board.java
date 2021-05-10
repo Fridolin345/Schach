@@ -77,6 +77,7 @@ public class Board
 
     public PieceColor pieceColorAt( Position position )
     {
+        if(position==null){return null;}
         return isPieceAt( position ) ? null : getPiece( position ).getColor();
     }
 

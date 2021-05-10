@@ -29,7 +29,7 @@ public class DrawField extends JPanel
         public void mousePressed( MouseEvent e )
         {
             Position position = Position.ofScreen( e.getX() / 64, e.getY() / 64 );
-            fieldClicked( position, Optional.ofNullable( getBoard().getPiece( position ) ) );
+            fieldClicked( position); //, Optional.ofNullable( getBoard().getPiece( position ) ) );
         }
     };
 
@@ -56,49 +56,59 @@ public class DrawField extends JPanel
         return isWhiteOnBot ? Board.getInstance() : Board.getInstance().getInvertedCopy();
     }
 
-    public void fieldClicked( Position position, Optional<Piece> piece )
+    public void fieldClicked( Position position)
     {
-        System.out.println( position + " -> " + piece.map( Enum::name ).orElse( "EMPTY FIELD" ) );
+        //System.out.println( position + " -> " + piece.map( Enum::name ).orElse( "EMPTY FIELD" ) );
         highlighted = position;
 
-        if ( moveStartpos == null )
-        { //Keine Figur ausgewählt zum fahren
+        if ( moveStartpos == null )//Keine Figur ausgewählt zum fahren
+        {
             for ( int i = 0; i < possMovesField.length; i++ )
             {
                 possMovesField[i] = false;
             }
-            if ( piece.isPresent() )
-            {
-                Set<Position> pMoves = new HashSet<>();
-                //pMoves = board.getPiece(position).getPieceType().getAllPossibleMoves(position, board);
-                pMoves.removeAll( pMoves );
-                pMoves.add( new Position( position.getRow() - 1, position.getColumn() ) );
-
-                moveStartpos = position;
-
-                for ( Position p : pMoves )
-                {
-                    possMovesField[p.getRow() * 8 + p.getColumn()] = true;
-                }
-            }
         }
-        else //Figur ausgewählt zum Fahren
-        {
-            if ( possMovesField[position.getRow() * 8 + position.getColumn()] ) //Klickt auf ein Fahrfeld
-            {
-                move( moveStartpos, position );
-            }
-            else
-            { //Wählt anderes Feld aus
-                for ( int i = 0; i < possMovesField.length; i++ )
-                {
-                    possMovesField[i] = false;
-                }
-                moveStartpos = null;
-            }
-        }
+
+       if(moveStartpos == null) //Kein Feld ausgewählt
+       {
+           if ( getBoard().isPieceAt( position ) )
+           {
+               //Noch prüfen ob deine Farbe aber es gibt noch keine Variable
+               //"OpponentRow" muss auch noch dementsprechend angepasst werden
+               Set<Position> pMoves = getBoard().getPiece(position).getPieceType().getAllPossibleMoves(position, 7);
+               for ( Position p : pMoves )
+               {
+                   possMovesField[p.getRow() * 8 + p.getColumn()] = true;
+               }
+               moveStartpos = position;
+           }
+       } else //Schon Figur ausgewählt
+       {
+           if ( possMovesField[position.getRow() * 8 + position.getColumn()] ) //Kann auf ausgewähltes Feld fahren
+           {
+               move( moveStartpos, position );
+               for ( int i = 0; i < possMovesField.length; i++ )
+               {
+                   possMovesField[i] = false;
+               }
+               repaint();
+           }
+           else //Kann nicht auf ausgewähltes Feld fahren
+           {
+               for ( int i = 0; i < possMovesField.length; i++ )
+               {
+                   possMovesField[i] = false;
+               }
+               moveStartpos = null;
+               fieldClicked( position );
+           }
+       }
         repaint();
     }
+
+
+
+
 
     public void move( Position from, Position to )
     {
