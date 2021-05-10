@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Board
 {
+
     private static Board instance = new Board();
 
     public static Board getInstance()
@@ -56,7 +57,8 @@ public class Board
 
     public void movePiece( Position from, Position to )
     {
-
+        setPiece( to, getPiece( from ) );
+        setPiece( from, null );
     }
 
     public List<Position> getPositions( Piece piece )
@@ -123,12 +125,14 @@ public class Board
 
     }
 
-    public void move(int startRow, int startCol, int endRow, int endCol){
+    public void move( int startRow, int startCol, int endRow, int endCol )
+    {
 
     }
 
-    public void removePieceAt(int row, int col){
-        board[row*8+col] = 0;
+    public void removePieceAt( int row, int col )
+    {
+        board[row * 8 + col] = 0;
 
     }
 }
