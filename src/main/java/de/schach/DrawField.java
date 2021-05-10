@@ -76,7 +76,12 @@ public class DrawField extends JPanel
                 possMovesField[p.getRow()*8+p.getColumn()] = true;
             }
         } else if(possMovesField[position.getRow()*8+position.getColumn()]){
-            getBoard().
+            getBoard().move(moveStartpos.getRow(), moveStartpos.getColumn(), position.getRow(), position.getColumn());
+        } else {
+            for(int i = 0; i<possMovesField.length; i++){
+                possMovesField[i] = false;
+            }
+            moveStartpos = null;
         }
         repaint();
     }
