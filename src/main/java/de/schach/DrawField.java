@@ -28,14 +28,49 @@ public class DrawField extends JPanel
         @Override
         public void mousePressed( MouseEvent e )
         {
-            Position position = Position.ofScreen( e.getX() / 64, e.getY() / 64 );
-            fieldClicked( position); //, Optional.ofNullable( getBoard().getPiece( position ) ) );
+            position = Position.ofScreen( e.getX() / 64, e.getY() / 64 );
+            imageCorner.setLocation( position.getScreenX() * 64, position.getScreenY() * 64 );
+            previousPoint = e.getPoint();
+            mouseIsPressed = true;
+
+            fieldClicked( position ); //, Optional.ofNullable( getBoard().getPiece( position ) ) );
+
+            repaint();
+            System.out.println( "ok" );
         }
+
+        @Override
+        public void mouseReleased( MouseEvent e )
+        {
+            position = Position.ofScreen( e.getX() / 64, e.getY() / 64 );
+            if ( possMovesField[position.getRow() * 8 + position.getColumn()] ) //Kann auf ausgewähltes Feld fahren
+            {
+                move( moveStartpos, position );
+                for ( int i = 0; i < possMovesField.length; i++ )
+                {
+                    possMovesField[i] = false;
+                }
+                moveStartpos = null;
+                repaint();
+            }
+            mouseIsPressed = false;
+            repaint();
+        }
+
     };
 
+
+    //Piece moving
     private static boolean[] possMovesField = new boolean[8 * 8];
     RenderingHints hints = new RenderingHints( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
     private static Position moveStartpos = null;
+    Position position;
+
+    //Drag and Drop
+    Point imageCorner = new Point(0, 0);                            //Bildecke
+    Point previousPoint = new Point(0, 0);                    //letzter Mauszeigerpunkt
+    boolean mouseIsPressed;
+
 
     public DrawField() throws IOException
     {
@@ -49,6 +84,9 @@ public class DrawField extends JPanel
             }
         }
         this.addMouseListener( mouse );
+        //Drag and Drop:
+        DragListener dragListener = new DragListener();
+        this.addMouseMotionListener( dragListener );        //während der verschiebung
     }
 
     public Board getBoard()
@@ -56,7 +94,7 @@ public class DrawField extends JPanel
         return isWhiteOnBot ? Board.getInstance() : Board.getInstance().getInvertedCopy();
     }
 
-    public void fieldClicked( Position position)
+    public void fieldClicked( Position position )
     {
         //System.out.println( position + " -> " + piece.map( Enum::name ).orElse( "EMPTY FIELD" ) );
         highlighted = position;
@@ -69,45 +107,44 @@ public class DrawField extends JPanel
             }
         }
 
-       if(moveStartpos == null) //Kein Feld ausgewählt
-       {
-           if ( getBoard().isPieceAt( position ) )
-           {
-               //Noch prüfen ob deine Farbe aber es gibt noch keine Variable
-               //"OpponentRow" muss auch noch dementsprechend angepasst werden
-               Set<Position> pMoves = getBoard().getPiece(position).getPieceType().getAllPossibleMoves(position, 7);
-               for ( Position p : pMoves )
-               {
-                   possMovesField[p.getRow() * 8 + p.getColumn()] = true;
-               }
-               moveStartpos = position;
-           }
-       } else //Schon Figur ausgewählt
-       {
-           if ( possMovesField[position.getRow() * 8 + position.getColumn()] ) //Kann auf ausgewähltes Feld fahren
-           {
-               move( moveStartpos, position );
-               for ( int i = 0; i < possMovesField.length; i++ )
-               {
-                   possMovesField[i] = false;
-               }
-               repaint();
-           }
-           else //Kann nicht auf ausgewähltes Feld fahren
-           {
-               for ( int i = 0; i < possMovesField.length; i++ )
-               {
-                   possMovesField[i] = false;
-               }
-               moveStartpos = null;
-               fieldClicked( position );
-           }
-       }
+        if ( moveStartpos == null ) //Kein Feld ausgewählt
+        {
+            if ( getBoard().isPieceAt( position ) )
+            {
+                //Noch prüfen ob deine Farbe aber es gibt noch keine Variable
+                //"OpponentRow" muss auch noch dementsprechend angepasst werden
+                Set<Position> pMoves = getBoard().getPiece( position ).getPieceType().getAllPossibleMoves( position, 7 );
+                for ( Position p : pMoves )
+                {
+                    possMovesField[p.getRow() * 8 + p.getColumn()] = true;
+                }
+                moveStartpos = position;
+            }
+        }
+        else //Schon Figur ausgewählt
+        {
+            if ( possMovesField[position.getRow() * 8 + position.getColumn()] ) //Kann auf ausgewähltes Feld fahren
+            {
+                move( moveStartpos, position );
+                for ( int i = 0; i < possMovesField.length; i++ )
+                {
+                    possMovesField[i] = false;
+                }
+                moveStartpos = null;
+                repaint();
+            }
+            else //Kann nicht auf ausgewähltes Feld fahren
+            {
+                for ( int i = 0; i < possMovesField.length; i++ )
+                {
+                    possMovesField[i] = false;
+                }
+                moveStartpos = null;
+                fieldClicked( position );
+            }
+        }
         repaint();
     }
-
-
-
 
 
     public void move( Position from, Position to )
@@ -119,12 +156,6 @@ public class DrawField extends JPanel
     {
         return isWhiteOnBot == ( color == PieceColor.WHITE ) ? new Vector( 0, -1 ) : new Vector( 0, 1 );
     }
-
-    public void drawPossibleMoves( Position position, Board board )
-    {
-
-    }
-
 
     public void setWhiteOnBot( boolean whiteOnBot )
     {
@@ -159,14 +190,34 @@ public class DrawField extends JPanel
     private void drawFigures( Graphics2D g )
     {
         //Figuren zeichnen:
-        forEachCell( pos ->
+        if ( !mouseIsPressed )
         {
-            if ( getBoard().isPieceAt( pos ) )
+            forEachCell( pos ->
             {
-                Image img = sprites[getBoard().getPiece( pos ).getSpriteIndex()];
-                g.drawImage( img, pos.getScreenX() * 64, pos.getScreenY() * 64, this );
-            }
-        } );
+                if ( getBoard().isPieceAt( pos ) )
+                {
+                    Image img = sprites[getBoard().getPiece( pos ).getSpriteIndex()];
+                    g.drawImage( img, pos.getScreenX() * 64, pos.getScreenY() * 64, this );
+                }
+            } );
+        }
+        else
+        {
+            forEachCell( pos ->
+            {
+                if ( getBoard().isPieceAt( pos ) )
+                    if ( pos.getColumn() == position.getColumn() && pos.getRow() == position.getRow() )
+                    {
+                        Image img = sprites[getBoard().getPiece( pos ).getSpriteIndex()];
+                        g.drawImage( img, (int) imageCorner.getX(), (int) imageCorner.getY(), this );
+                    }
+                    else
+                    {
+                        Image img = sprites[getBoard().getPiece( pos ).getSpriteIndex()];
+                        g.drawImage( img, pos.getScreenX() * 64, pos.getScreenY() * 64, this );
+                    }
+            } );
+        }
     }
 
     private void drawPossibleMoves( Graphics2D g )
@@ -195,5 +246,31 @@ public class DrawField extends JPanel
         Position end = Position.ofScreen( 7, 7 );
         start.iterateTo( end, forEach );
     }
+
+
+    //Drag and Drop
+
+
+    private class DragListener extends MouseMotionAdapter
+    {
+
+        public void mouseDragged( MouseEvent e )
+        {
+            if ( mouseIsPressed )
+            {
+                System.out.println( "ok " + e.getPoint() );
+                System.out.println( position );
+
+                Point currentPt = e.getPoint();
+                imageCorner.translate(
+                        (int) ( currentPt.getX() - previousPoint.getX() ),
+                        (int) ( currentPt.getY() - previousPoint.getY() ) );
+                previousPoint = currentPt;
+                repaint();
+
+            }
+        }
+    }
+
 
 }
