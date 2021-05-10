@@ -56,6 +56,44 @@ public enum PieceType
         return representative;
     }
 
+    private Set<Vector> getMoveVectors( Position position, Vector offensiveDirection )
+    {
+        Set<Vector> moves = new HashSet<>();
+        if ( this == PAWN )
+        {
+            //Forward
+            moves.add( offensiveDirection );
+            //Schräg zum Schlagen
+            moves.add( offensiveDirection.add( new Vector( 1, 0 ) ) );
+            moves.add( offensiveDirection.add( new Vector( -1, 0 ) ) );
+            //2 Forward
+            moves.add( offensiveDirection.multiply( 2 ) );
+        }
+        else
+        {
+            int reach = onlyOneStep ? 1 : 8;
+            for ( Vector vector : baseMoveVectors )
+            {
+                Vector oneWay = new Vector( vector ).multiply( reach ); //just up
+                Vector otherWay = new Vector( vector ).multiply( -reach ); //invert x,y
+
+                Vector oneWaySide = new Vector( vector ); //invert x
+                oneWaySide.setX( oneWaySide.getX() * -1 );
+                oneWaySide = oneWaySide.multiply( reach );
+
+                Vector otherWaySide = new Vector( vector ); //invert y
+                otherWaySide.setY( otherWaySide.getY() * -1 );
+                otherWaySide = otherWaySide.multiply( reach );
+            }
+        }
+        return moves;
+    }
+
+    public Set<Position> getAllPossibleMoves( Position position, Vector offensiveDirection )
+    {
+        return null; //TODO
+    }
+
     public Set<Position> getAllPossibleMoves( Position position, int opponentRow )
     {
         Set<Position> positions = new HashSet<>();

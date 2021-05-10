@@ -38,36 +38,10 @@ public class Board
         return new Board( ArrayUtil.rowFlippedBoard( this.board ) );
     }
 
-
-    public Piece getPiece( int row, int colum )
-    {
-        byte pieceData = board[row * 8 + colum];
-        System.out.println();
-        return Piece.fromByte( pieceData );
-    }
-
     public Piece getPiece( Position position )
     {
-        return getPiece( position.getRow(), position.getColumn() );
-    }
-
-    public void setPiece( int row, int colum, Piece piece )
-    {
-        board[row * 8 + colum] = piece == null ? 0 : piece.toByte();
-    }
-
-    public List<Position> getPositions( Piece piece )
-    {
-        List<Position> positions = new LinkedList<>();
-        for ( int row = 0; row < 8; row++ )
-        {
-            for ( int col = 0; col < 8; col++ )
-            {
-                if ( Piece.fromByte( board[row * 8 + col] ) == piece )
-                    positions.add( new Position( row, col ) );
-            }
-        }
-        return positions;
+        byte pieceData = board[position.getBoardPosition()];
+        return Piece.fromByte( pieceData );
     }
 
     public boolean isPieceAt( Position position )
@@ -78,6 +52,25 @@ public class Board
     public void setPiece( Position position, Piece piece )
     {
         board[position.getBoardPosition()] = piece == null ? 0 : piece.toByte();
+    }
+
+    public void movePiece( Position from, Position to )
+    {
+
+    }
+
+    public List<Position> getPositions( Piece piece )
+    {
+        List<Position> positions = new LinkedList<>();
+        for ( int row = 0; row < 8; row++ )
+        {
+            for ( int col = 0; col < 8; col++ )
+            {
+                if ( Piece.fromByte( board[row * 8 + col] ) == piece )
+                    positions.add( Position.ofBoard( row, col ) );
+            }
+        }
+        return positions;
     }
 
     public PieceColor pieceColorAt( Position position )
