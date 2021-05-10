@@ -18,4 +18,9 @@ public enum PieceColor
         return value;
     }
 
+    public PieceColor invert()
+    {
+        return this == WHITE ? BLACK : WHITE;
+    }
+
 }
