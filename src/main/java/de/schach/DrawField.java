@@ -61,28 +61,41 @@ public class DrawField extends JPanel
         System.out.println( position + " -> " + piece.map( Enum::name ).orElse( "EMPTY FIELD" ) );
         highlighted = position;
 
-        if(moveStartpos == null){ //Keine Figur ausgewählt zum fahren
-            for(int i = 0; i<possMovesField.length; i++){
+        if ( moveStartpos == null )
+        { //Keine Figur ausgewählt zum fahren
+            for ( int i = 0; i < possMovesField.length; i++ )
+            {
                 possMovesField[i] = false;
             }
-            if(getBoard().isPieceAt(position)){
+            if ( getBoard().isPieceAt( position ) )
+            {
                 Set<Position> pMoves = new HashSet<>();
                 //pMoves = board.getPiece(position).getPieceType().getAllPossibleMoves(position, board);
-                pMoves.removeAll(pMoves);
-                pMoves.add(new Position(position.getRow()-1, position.getColumn()));
+                pMoves.removeAll( pMoves );
+                pMoves.add( new Position( position.getRow() - 1, position.getColumn() ) );
 
                 moveStartpos = position;
 
-                for(Position p : pMoves){
-                    possMovesField[p.getRow()*8+p.getColumn()] = true;
+                for ( Position p : pMoves )
+                {
+                    possMovesField[p.getRow() * 8 + p.getColumn()] = true;
                 }
             }
-        } else {
-            if(getBoard().isPieceAt(position)){
-            } else if(possMovesField[position.getRow()*8+position.getColumn()]){
-                getBoard().move(moveStartpos.getRow(), moveStartpos.getColumn(), position.getRow(), position.getColumn());
-            } else {
-                for(int i = 0; i<possMovesField.length; i++){
+        }
+        else
+        {
+            if ( getBoard().pieceColorAt( position ) == )
+            {
+
+            }
+            else if ( possMovesField[position.getRow() * 8 + position.getColumn()] )
+            {
+                getBoard().move( moveStartpos.getRow(), moveStartpos.getColumn(), position.getRow(), position.getColumn() );
+            }
+            else
+            {
+                for ( int i = 0; i < possMovesField.length; i++ )
+                {
                     possMovesField[i] = false;
                 }
                 moveStartpos = null;
@@ -98,7 +111,7 @@ public class DrawField extends JPanel
 
     public Vector getOffensiveDirection( PieceColor color )
     {
-        return isWhiteOnBot == (color == PieceColor.WHITE) ? new Vector( 0, -1 ) : new Vector( 0, 1 );
+        return isWhiteOnBot == ( color == PieceColor.WHITE ) ? new Vector( 0, -1 ) : new Vector( 0, 1 );
     }
 
     public void drawPossibleMoves( Position position, Board board )
@@ -152,14 +165,18 @@ public class DrawField extends JPanel
 
     private void drawPossibleMoves( Graphics2D g )
     {
-        if(moveStartpos!=null) { //Methode muss nur wenn nötig aufgerufen werden... eigentlich
-            for (int row=0; row<8; row++) {
-                for(int col = 0; col<8; col++) {
-                    if(possMovesField[row*8+col]) {
-                        g.setRenderingHints(hints);
-                        g.setStroke(new BasicStroke(5));
-                        g.setColor(new Color(100, 100, 100, 150));
-                        g.drawOval(col * 64, row * 64, 64, 64);
+        if ( moveStartpos != null )
+        { //Methode muss nur wenn nötig aufgerufen werden... eigentlich
+            for ( int row = 0; row < 8; row++ )
+            {
+                for ( int col = 0; col < 8; col++ )
+                {
+                    if ( possMovesField[row * 8 + col] )
+                    {
+                        g.setRenderingHints( hints );
+                        g.setStroke( new BasicStroke( 5 ) );
+                        g.setColor( new Color( 100, 100, 100, 150 ) );
+                        g.drawOval( col * 64, row * 64, 64, 64 );
                     }
                 }
             }
