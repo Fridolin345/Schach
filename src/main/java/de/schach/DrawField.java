@@ -67,7 +67,7 @@ public class DrawField extends JPanel
             {
                 possMovesField[i] = false;
             }
-            if ( getBoard().isPieceAt( position ) )
+            if ( piece.isPresent() )
             {
                 Set<Position> pMoves = new HashSet<>();
                 //pMoves = board.getPiece(position).getPieceType().getAllPossibleMoves(position, board);
@@ -82,18 +82,14 @@ public class DrawField extends JPanel
                 }
             }
         }
-        else
+        else //Figur ausgewählt zum Fahren
         {
-            if ( getBoard().pieceColorAt( position ) == )
+            if ( possMovesField[position.getRow() * 8 + position.getColumn()] ) //Klickt auf ein Fahrfeld
             {
-
-            }
-            else if ( possMovesField[position.getRow() * 8 + position.getColumn()] )
-            {
-                getBoard().move( moveStartpos.getRow(), moveStartpos.getColumn(), position.getRow(), position.getColumn() );
+                move( moveStartpos, position );
             }
             else
-            {
+            { //Wählt anderes Feld aus
                 for ( int i = 0; i < possMovesField.length; i++ )
                 {
                     possMovesField[i] = false;
