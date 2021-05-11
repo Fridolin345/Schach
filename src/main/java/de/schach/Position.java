@@ -57,12 +57,15 @@ public class Position
         return getRow();
     }
 
+    public Vector toVector()
+    {
+        return new Vector( getScreenX(), getScreenY() );
+    }
+
     public Position inverted()
     {
         return Position.ofBoard( 7 - row, column );
     }
-
-
 
     public boolean isValidOnBoard()
     {

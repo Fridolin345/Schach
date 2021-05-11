@@ -39,6 +39,16 @@ public class BoardLogic
         return true;
     }
 
+    private static boolean isMoveAllowed( Position position, Vector vector )
+    {
+        if ( Board.getInstance().isPieceAt( position ) )
+        {
+            Piece piece = Board.getInstance().getPiece( position );
+
+        }
+        return false; //TODO
+    }
+
     //Beinhaltet ALLE möglichen Züge
     //D.h. die Diagonalen Züge für den Bauer sowie die Doppelschritte - die Voraussetzungen werden hier nicht geprüft
     //Die Positionen liegen niemals außerhalb des Brettes
@@ -49,7 +59,8 @@ public class BoardLogic
 
         //muss noch überarbeitet werden, aber erstmal ist schwarz oben - sorgt dafür, dass Bauern nur in Richtung des Gegners laufen können
         int opponentSide = piece.getColor() == PieceColor.WHITE ? 0 : 8;
-        return piece.getPieceType().getAllPossibleMoves( position, opponentSide );
+        //return piece.getPieceType().getAllPossibleMoves( position, opponentSide );
+        return null; //TODO
     }
 
 }

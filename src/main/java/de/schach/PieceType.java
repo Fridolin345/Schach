@@ -56,7 +56,7 @@ public enum PieceType
         return representative;
     }
 
-    private Set<Vector> getMoveVectors( Position position, Vector offensiveDirection )
+    private Set<Vector> getMoveVectors( Vector offensiveDirection )
     {
         Set<Vector> moves = new HashSet<>();
         if ( this == PAWN )
@@ -87,55 +87,6 @@ public enum PieceType
             }
         }
         return moves;
-    }
-
-    public Set<Position> getAllPossibleMoves( Position position, Vector offensiveDirection )
-    {
-        return null; //TODO
-    }
-
-    public Set<Position> getAllPossibleMoves( Position position, int opponentRow )
-    {
-        Set<Position> positions = new HashSet<>();
-        if ( this == PAWN )
-        {
-            int rowDiff = position.getRow() - opponentRow;
-            int direction = rowDiff / Math.abs( rowDiff );
-            //Forward
-            positions.add( position.move( new Vector( 0, direction ) ) );
-            //Schräg zum Schlagen
-            positions.add( position.move( new Vector( 1, direction ) ) );
-            positions.add( position.move( new Vector( -1, direction ) ) );
-            //2 Forward
-            positions.add( position.move( new Vector( 0, direction ).multiply( 2 ) ) );
-        }
-        else
-        {
-            //Für alle Basis-Richtungen
-            for ( Vector vector : baseMoveVectors )
-            {
-                Vector current = vector;
-                for ( int i = 0; i < ( onlyOneStep ? 1 : 8 ); i++ )
-                {
-                    Vector oneWay = new Vector( current ); //just up
-                    Vector otherWay = new Vector( current ).multiply( -1 ); //invert x,y
-                    Vector oneWaySide = new Vector( current ); //invert x
-                    oneWaySide.setX( oneWaySide.getX() * -1 );
-                    Vector otherWaySide = new Vector( current ); //invert y
-                    otherWaySide.setY( otherWaySide.getY() * -1 );
-
-                    positions.add( position.move( oneWay ) );
-                    positions.add( position.move( oneWaySide ) );
-                    positions.add( position.move( otherWay ) );
-                    positions.add( position.move( otherWaySide ) );
-
-                    current = current.add( vector );
-                }
-            }
-        }
-        //Alle Positionen außerhalb des Brettes entfernen
-        positions.removeIf( pos -> !pos.isValidOnBoard() );
-        return positions;
     }
 
 }

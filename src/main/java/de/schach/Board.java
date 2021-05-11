@@ -115,7 +115,6 @@ public class Board
                     PieceColor color = Character.isUpperCase( pieceToken ) ? PieceColor.WHITE : PieceColor.BLACK;
                     Piece piece = Piece.fromPartialData( type, color );
                     board[currentField++] = piece.toByte();
-                    System.out.println( "placed " + piece.name() );
                 }
                 else
                 {

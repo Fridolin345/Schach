@@ -2,6 +2,8 @@ package de.schach;
 
 import lombok.ToString;
 
+import java.util.Set;
+
 @ToString
 public class Vector
 {
@@ -49,6 +51,23 @@ public class Vector
     public int getY()
     {
         return y;
+    }
+
+    public Vector toBaseVector()
+    {
+        int euclid = euclid( Math.max( x, y ), Math.min( x, y ) );
+        if ( euclid <= 0 ) return new Vector( x, y );
+        return new Vector( x / euclid, y / euclid );
+    }
+
+    public static int euclid( int a, int b )
+    {
+        return b == 0 ? a : euclid( b, a % b );
+    }
+
+    public Set<Position> getPositionsAlong( Position position )
+    {
+        return null;
     }
 
 }

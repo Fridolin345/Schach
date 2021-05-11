@@ -7,7 +7,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Set;
 import java.util.function.Consumer;
 
 
@@ -27,14 +27,14 @@ public class DrawField extends JPanel
 
     //Piece moving
     private static boolean[] possMovesField = new boolean[8 * 8];
-    RenderingHints hints = new RenderingHints( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+    private RenderingHints hints = new RenderingHints( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
     private static Position moveStartpos = null;
-    Position position;
+    private Position position;
 
     //Drag and Drop
-    Point imageCorner = new Point( 0, 0 );                            //Bildecke
-    Point previousPoint = new Point( 0, 0 );                    //letzter Mauszeigerpunkt
-    boolean mouseIsPressed;
+    private Point imageCorner = new Point( 0, 0 );                            //Bildecke
+    private Point previousPoint = new Point( 0, 0 );                    //letzter Mauszeigerpunkt
+    private boolean mouseIsPressed;
 
 
 
@@ -78,7 +78,7 @@ public class DrawField extends JPanel
             {
                 //Noch prüfen ob deine Farbe aber es gibt noch keine Variable
                 //"OpponentRow" muss auch noch dementsprechend angepasst werden
-                Set<Position> pMoves = getBoard().getPiece( position ).getPieceType().getAllPossibleMoves( position, 7 );
+                Set<Position> pMoves = BoardLogic.getAllPossibleMoves( position );
                 for ( Position p : pMoves )
                 {
                     possMovesField[p.getRow() * 8 + p.getColumn()] = true;
