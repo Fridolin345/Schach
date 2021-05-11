@@ -46,6 +46,11 @@ public enum PieceType
         return null;
     }
 
+    public boolean isOnlyOneStep()
+    {
+        return onlyOneStep;
+    }
+
     public char getFenChar()
     {
         return fenChar;
@@ -56,7 +61,7 @@ public enum PieceType
         return representative;
     }
 
-    private Set<Vector> getMoveVectors( Vector offensiveDirection )
+    public Set<Vector> getMoveVectors( Vector offensiveDirection )
     {
         Set<Vector> moves = new HashSet<>();
         if ( this == PAWN )
@@ -76,14 +81,18 @@ public enum PieceType
             {
                 Vector oneWay = new Vector( vector ).multiply( reach ); //just up
                 Vector otherWay = new Vector( vector ).multiply( -reach ); //invert x,y
+                moves.add( oneWay );
+                moves.add( otherWay );
 
                 Vector oneWaySide = new Vector( vector ); //invert x
                 oneWaySide.setX( oneWaySide.getX() * -1 );
                 oneWaySide = oneWaySide.multiply( reach );
+                moves.add( oneWaySide );
 
                 Vector otherWaySide = new Vector( vector ); //invert y
                 otherWaySide.setY( otherWaySide.getY() * -1 );
                 otherWaySide = otherWaySide.multiply( reach );
+                moves.add( otherWaySide );
             }
         }
         return moves;

@@ -1,6 +1,6 @@
 package de.schach;
 
-import java.util.*;
+import java.util.Scanner;
 
 public class Board
 {
@@ -13,6 +13,7 @@ public class Board
     }
 
     private byte[] board;
+    private PieceColor topColor;
 
     private Board()
     {
@@ -61,23 +62,26 @@ public class Board
         setPiece( from, null );
     }
 
-    public List<Position> getPositions( Piece piece )
+    public PieceColor topColor()
     {
-        List<Position> positions = new LinkedList<>();
-        for ( int row = 0; row < 8; row++ )
+        return topColor;
+    }
+
+    public Vector getOffensiveDirection( PieceColor color )
+    {
+        if ( topColor == PieceColor.BLACK )
         {
-            for ( int col = 0; col < 8; col++ )
-            {
-                if ( Piece.fromByte( board[row * 8 + col] ) == piece )
-                    positions.add( Position.ofBoard( row, col ) );
-            }
+            return color == PieceColor.WHITE ? new Vector( 0, -1 ) : new Vector( 0, 1 );
         }
-        return positions;
+        else return color == PieceColor.WHITE ? new Vector( 0, 1 ) : new Vector( 0, -1 );
     }
 
     public PieceColor pieceColorAt( Position position )
     {
-        if(position==null){return null;}
+        if ( position == null )
+        {
+            return null;
+        }
         return isPieceAt( position ) ? null : getPiece( position ).getColor();
     }
 
@@ -89,6 +93,10 @@ public class Board
         String data = fen.substring( fen.indexOf( ' ' ) + 1 );
 
         String[] settings = data.split( " " ); //TODO later, just skip it currently
+
+        if ( settings[0].equalsIgnoreCase( "w" ) )
+            topColor = PieceColor.BLACK;
+        else topColor = PieceColor.WHITE;
 
         String[] ranks = squares.split( "/" );
 

@@ -1,7 +1,7 @@
 package de.schach;
 
-import java.util.Collections;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class BoardLogic
 {
@@ -39,14 +39,42 @@ public class BoardLogic
         return true;
     }
 
-    private static boolean isMoveAllowed( Position position, Vector vector )
+    //a list of all moves that are not blocked by a figure on the board
+    //includes move onto fields with opponent figures
+    //does NOT exclude invalid KING moves yet
+    //does NOT exclude invalid PAWN moves yet
+    public static List<Vector> getUnblockedMoves( Position position )
     {
-        if ( Board.getInstance().isPieceAt( position ) )
+        List<Vector> unblocked = new LinkedList<>();
+        Piece piece = Board.getInstance().getPiece( position );
+        if ( piece == null ) return Collections.emptyList();
+        PieceColor color = piece.getColor();
+        Set<Vector> moveVectors = piece.getPieceType().getMoveVectors( Board.getInstance().getOffensiveDirection( piece.getColor() ) );
+        Debug.log( Arrays.toString( moveVectors.toArray() ) );
+        for ( Vector moveVector : moveVectors )
         {
-            Piece piece = Board.getInstance().getPiece( position );
-
+            Vector base = moveVector.toBaseVector();
+            Vector current = base;
+            int reach = 1;
+            do
+            {
+                current = base.multiply( reach++ );
+                if ( !position.move( current ).isValidOnBoard() ) break;
+                int canMove = canMoveHere( color, position, current );
+                if ( canMove == -1 ) break;
+                unblocked.add( current );
+                if ( canMove == 1 ) break; //opponent figure there;
+                if(piece.getPieceType().isOnlyOneStep()) break;
+            }
+            while ( reach < 9 );
         }
-        return false; //TODO
+        return unblocked;
+    }
+
+    //no checks for in between
+    private static int canMoveHere( PieceColor color, Position start, Vector move )
+    {
+        return !Board.getInstance().isPieceAt( start.move( move ) ) ? 0 : ( Board.getInstance().getPiece( start.move( move ) ).getColor().invert() == color ? 1 : -1 );
     }
 
     //Beinhaltet ALLE möglichen Züge
@@ -56,11 +84,8 @@ public class BoardLogic
     {
         Piece piece = Board.getInstance().getPiece( position );
         if ( piece == null ) return Collections.emptySet();
-
-        //muss noch überarbeitet werden, aber erstmal ist schwarz oben - sorgt dafür, dass Bauern nur in Richtung des Gegners laufen können
-        int opponentSide = piece.getColor() == PieceColor.WHITE ? 0 : 8;
-        //return piece.getPieceType().getAllPossibleMoves( position, opponentSide );
-        return null; //TODO
+        List<Vector> unblockedMoves = getUnblockedMoves( position );
+        return unblockedMoves.stream().map( position::move ).collect( Collectors.toSet() );
     }
 
 }

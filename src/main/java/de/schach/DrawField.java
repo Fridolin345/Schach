@@ -36,8 +36,6 @@ public class DrawField extends JPanel
     private Point previousPoint = new Point( 0, 0 );                    //letzter Mauszeigerpunkt
     private boolean mouseIsPressed;
 
-
-
     public DrawField() throws IOException
     {
         int ind = 0;

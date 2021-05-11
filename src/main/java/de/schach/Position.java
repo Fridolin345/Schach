@@ -5,7 +5,7 @@ import lombok.ToString;
 import java.util.function.Consumer;
 
 @ToString
-public class Position
+public class Position implements Comparable<Position>
 {
 
     private int row;
@@ -103,4 +103,12 @@ public class Position
         return row * 10 + column;
     }
 
+
+    @Override
+    public int compareTo( Position other )
+    {
+        if ( other.getRow() == this.getRow() )
+            return Integer.compare( getColumn(), other.getColumn() );
+        else return Integer.compare( getRow(), other.getRow() );
+    }
 }

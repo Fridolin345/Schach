@@ -2,10 +2,10 @@ package de.schach;
 
 import lombok.ToString;
 
-import java.util.Set;
+import java.util.*;
 
 @ToString
-public class Vector
+public class Vector implements Comparable<Vector>
 {
 
     private int x;
@@ -53,9 +53,19 @@ public class Vector
         return y;
     }
 
+    public int getAbsX()
+    {
+        return Math.abs( x );
+    }
+
+    public int getAbsY()
+    {
+        return Math.abs( y );
+    }
+
     public Vector toBaseVector()
     {
-        int euclid = euclid( Math.max( x, y ), Math.min( x, y ) );
+        int euclid = euclid( Math.max( getAbsX(), getAbsY() ), Math.min( getAbsX(), getAbsY() ) );
         if ( euclid <= 0 ) return new Vector( x, y );
         return new Vector( x / euclid, y / euclid );
     }
@@ -65,9 +75,46 @@ public class Vector
         return b == 0 ? a : euclid( b, a % b );
     }
 
-    public Set<Position> getPositionsAlong( Position position )
+    public List<Vector> getPositionVectorsAlong()
     {
-        return null;
+        List<Vector> vectors = new LinkedList<>();
+        Vector base = toBaseVector();
+        Vector current = base;
+        do
+        {
+            vectors.add( current );
+            current = current.add( base );
+        }
+        while ( !current.equals( this ) );
+        vectors.add( this );
+        Collections.sort( vectors );
+        return vectors;
+    }
+
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+
+        Vector vector = (Vector) o;
+
+        if ( x != vector.x ) return false;
+        return y == vector.y;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = x;
+        result = 31 * result + y;
+        return result;
+    }
+
+    @Override
+    public int compareTo( Vector other )
+    {
+        return Integer.compare( this.getAbsX() + this.getAbsY(), other.getAbsX() + other.getAbsY() );
     }
 
 }
