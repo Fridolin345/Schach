@@ -56,6 +56,11 @@ public enum PieceType
         return fenChar;
     }
 
+    public char getNotationChar()
+    {
+       return Character.toUpperCase( fenChar );
+    }
+
     public byte getRepresentative()
     {
         return representative;
