@@ -1,5 +1,7 @@
 package de.schach.gui;
 
+import de.schach.board.Board;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -7,7 +9,11 @@ import java.io.IOException;
 
 public class GUI extends JFrame
 {
+
     public static DrawNotation notation = new DrawNotation();
+
+    private final Board gameBoard = Board.create();
+
     public GUI() throws IOException
     {
         this.setLayout( new BorderLayout() );
@@ -18,7 +24,7 @@ public class GUI extends JFrame
         Border b1 = BorderFactory.createLineBorder( Color.red, 5 );
         Border b2 = BorderFactory.createLineBorder( Color.green, 2 );
 
-        DrawField drawField = new DrawField();
+        DrawField drawField = new DrawField( gameBoard );
         drawField.setBounds( 10, 50, 510, 510 );
         drawField.setBorder( b1 );
 
@@ -29,17 +35,16 @@ public class GUI extends JFrame
         leftSide.setBorder( b2 );
 
         JPanel rightSide = new JPanel();
-        rightSide.setPreferredSize( new Dimension(550, 800) );
+        rightSide.setPreferredSize( new Dimension( 550, 800 ) );
         rightSide.setLayout( null );
         notation.setBounds( 0, 0, 550, 800 );
-        rightSide.add(notation);
-
+        rightSide.add( notation );
 
 
         repaint();
         this.add( leftSide, BorderLayout.WEST );
         //this.add( new Button(), BorderLayout.CENTER );
-        this.add(rightSide, BorderLayout.CENTER);
+        this.add( rightSide, BorderLayout.CENTER );
         this.setVisible( true ); //test
     }
 }

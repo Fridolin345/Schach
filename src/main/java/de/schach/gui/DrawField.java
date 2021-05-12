@@ -45,8 +45,9 @@ public class DrawField extends JPanel
     private Point previousPoint = new Point( 0, 0 );                    //letzter Mauszeigerpunkt
     private boolean mouseIsPressed;
 
-    public DrawField() throws IOException
+    public DrawField( Board gameBoard ) throws IOException
     {
+        this.currentGameBoard = gameBoard;
         int ind = 0;
         for ( int y = 0; y < 400; y += 200 )
         {   //Hier wird das Bild in die einzelnen Figuren unterstückelt
