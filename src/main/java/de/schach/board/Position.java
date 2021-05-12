@@ -45,6 +45,11 @@ public class Position implements Comparable<Position>
         return String.valueOf( ( ( 7 - getRow() ) + 1 ) );
     }
 
+    public Vector getDiff( Position to )
+    {
+        return to.toVector().add( this.toVector().multiply( -1 ) );
+    }
+
     public int getColumn()
     {
         return column;

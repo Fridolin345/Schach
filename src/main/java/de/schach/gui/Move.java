@@ -1,14 +1,16 @@
 package de.schach.gui;
 
 import de.schach.board.*;
+import de.schach.util.Vector;
 
 import java.util.Set;
 
 public class Move
 {
 
-    Position startPos, endPos;
-    Board beforeboard;
+    private final Position startPos;
+    private final Position endPos;
+    private final Board beforeboard;
 
     public Move( Position startPos, Position endPos, Board beforeboard )
     {
@@ -17,10 +19,20 @@ public class Move
         this.beforeboard = beforeboard;
     }
 
-    //public Board getAfterBoard(){
-    //
-    //}
+    public Vector getMoveVector()
+    {
+        return startPos.getDiff( getEndPos() );
+    }
 
+    public Position getStartPos()
+    {
+        return startPos;
+    }
+
+    public Position getEndPos()
+    {
+        return endPos;
+    }
 
     public String getAcronym()
     {
@@ -77,7 +89,8 @@ public class Move
         {
             acronym += startPos.rowToNotation();
         }
-        if( hits) {
+        if ( hits )
+        {
             acronym += "x";
         }
         acronym += endPos.toNotation();
