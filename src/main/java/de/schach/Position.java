@@ -8,6 +8,8 @@ import java.util.function.Consumer;
 public class Position implements Comparable<Position>
 {
 
+    private static final char[] FIELD = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h' };
+
     private int row;
     private int column;
 
@@ -25,6 +27,11 @@ public class Position implements Comparable<Position>
     public static Position ofBoard( int row, int column )
     {
         return new Position( row, column );
+    }
+
+    public String toNotation()
+    {
+        return FIELD[getColumn()] + String.valueOf( ( ( 7 - getRow() ) + 1 ) );
     }
 
     public int getColumn()
