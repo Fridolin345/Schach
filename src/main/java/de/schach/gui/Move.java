@@ -18,6 +18,11 @@ public class Move
         this.beforeboard = beforeboard;
     }
 
+    //public Board getAfterBoard(){
+    //
+    //}
+
+
     public String getAcronym()
     {
         String acronym = "";

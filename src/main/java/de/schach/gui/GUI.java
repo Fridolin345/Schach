@@ -11,7 +11,7 @@ public class GUI extends JFrame
     public GUI() throws IOException
     {
         this.setLayout( new BorderLayout() );
-        this.setSize( 1600, 900 );
+        this.setSize( 1400, 900 );
         this.setLocationRelativeTo( null );
         this.setDefaultCloseOperation( EXIT_ON_CLOSE );
 
