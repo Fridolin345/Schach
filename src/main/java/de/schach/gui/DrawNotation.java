@@ -1,4 +1,7 @@
-package de.schach;
+package de.schach.gui;
+
+import de.schach.board.Board;
+import de.schach.board.Position;
 
 import javax.swing.*;
 import java.awt.*;

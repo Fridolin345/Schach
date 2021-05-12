@@ -1,4 +1,8 @@
-package de.schach;
+package de.schach.board;
+
+import de.schach.exception.FenSyntaxException;
+import de.schach.util.ArrayUtil;
+import de.schach.util.Vector;
 
 import java.util.Scanner;
 

@@ -1,5 +1,6 @@
-package de.schach;
+package de.schach.board;
 
+import de.schach.util.Vector;
 import lombok.ToString;
 
 import java.util.function.Consumer;

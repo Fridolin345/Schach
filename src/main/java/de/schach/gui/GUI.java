@@ -1,4 +1,4 @@
-package de.schach;
+package de.schach.gui;
 
 import javax.swing.*;
 import javax.swing.border.Border;

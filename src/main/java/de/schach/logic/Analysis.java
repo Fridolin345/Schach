@@ -1,4 +1,4 @@
-package de.schach;
+package de.schach.logic;
 
 import javax.swing.*;
 

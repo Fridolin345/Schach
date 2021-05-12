@@ -1,4 +1,6 @@
-package de.schach;
+package de.schach.board;
+
+import de.schach.util.Vector;
 
 import java.util.HashSet;
 import java.util.Set;

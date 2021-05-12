@@ -1,4 +1,8 @@
-package de.schach;
+package de.schach.gui;
+
+import de.schach.board.*;
+import de.schach.logic.BoardLogic;
+import de.schach.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

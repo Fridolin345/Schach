@@ -1,9 +1,13 @@
-package de.schach;
+package de.schach.logic;
+
+import de.schach.board.*;
+import de.schach.util.Debug;
+import de.schach.util.Vector;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static de.schach.PieceType.*;
+import static de.schach.board.PieceType.*;
 
 public class BoardLogic
 {
@@ -13,7 +17,7 @@ public class BoardLogic
     {
         Piece piece = Board.getInstance().getPiece( position );
         if ( piece == null ) return Collections.emptySet();
-        List<Vector> unblockedMoves = getUnblockedMoves( position, true );
+        List<de.schach.util.Vector> unblockedMoves = getUnblockedMoves( position, true );
         if ( piece.getPieceType() == PAWN ) fixPawn( position, unblockedMoves );
         Set<Position> positions = unblockedMoves.stream().map( position::move ).collect( Collectors.toSet() );
         if ( piece.getPieceType() == KING ) fixKing( piece.getColor(), positions );
@@ -28,18 +32,18 @@ public class BoardLogic
     //includes move onto fields with opponent figures
     //does NOT exclude invalid KING moves yet
     //does NOT exclude invalid PAWN moves yet
-    private static List<Vector> getUnblockedMoves( Position position, boolean checkBlocking )
+    private static List<de.schach.util.Vector> getUnblockedMoves( Position position, boolean checkBlocking )
     {
-        List<Vector> unblocked = new LinkedList<>();
+        List<de.schach.util.Vector> unblocked = new LinkedList<>();
         Piece piece = Board.getInstance().getPiece( position );
         if ( piece == null ) return Collections.emptyList();
         PieceColor color = piece.getColor();
-        Set<Vector> moveVectors = piece.getPieceType().getMoveVectors( Board.getInstance().getOffensiveDirection( piece.getColor() ) );
+        Set<de.schach.util.Vector> moveVectors = piece.getPieceType().getMoveVectors( Board.getInstance().getOffensiveDirection( piece.getColor() ) );
         Debug.log( Arrays.toString( moveVectors.toArray() ) );
-        for ( Vector moveVector : moveVectors )
+        for ( de.schach.util.Vector moveVector : moveVectors )
         {
-            Vector base = ( piece.getPieceType() == PAWN && ( position.getRow() == 6 || position.getRow() == 1 ) ) ? moveVector : moveVector.toBaseVector();
-            Vector current;
+            de.schach.util.Vector base = ( piece.getPieceType() == PAWN && ( position.getRow() == 6 || position.getRow() == 1 ) ) ? moveVector : moveVector.toBaseVector();
+            de.schach.util.Vector current;
             int reach = 1;
             do
             {
@@ -59,7 +63,7 @@ public class BoardLogic
 
     //whether a figure is allowed to move there by movement rules
     //no checks for in between or blocking
-    private static int canMoveHere( PieceColor color, Position start, Vector move )
+    private static int canMoveHere( PieceColor color, Position start, de.schach.util.Vector move )
     {
         return !Board.getInstance().isPieceAt( start.move( move ) ) ? 0 : ( Board.getInstance().getPiece( start.move( move ) ).getColor().invert() == color ? 1 : -1 );
     }
