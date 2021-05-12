@@ -76,7 +76,7 @@ public class DrawField extends JPanel
             {
                 //Noch prüfen ob deine Farbe aber es gibt noch keine Variable
                 //"OpponentRow" muss auch noch dementsprechend angepasst werden
-                Set<Position> pMoves = BoardLogic.getAllPossibleMoves( position );
+                Set<Position> pMoves = BoardLogic.getAllValidMoves( position );
                 for ( Position p : pMoves )
                 {
                     possMovesField[p.getRow() * 8 + p.getColumn()] = true;
