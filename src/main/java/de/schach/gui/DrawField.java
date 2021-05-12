@@ -21,6 +21,8 @@ public class DrawField extends JPanel
     public static final Color WHITE_FIELD_COLOR = new Color( 235, 235, 208 );
     public static final Color BLACK_FIELD_COLOR = new Color( 119, 148, 85 );
     public static final Color HIGHLIGHTED_FIELD_COLOR = new Color( 250, 200, 15 );
+    public static final Color HIGHLIGHTED_ENEMY_CIRCLE = new Color( 255, 50, 50, 150 );
+    public static final Color HIGHLIGHTED_MOVE_CIRCLE = new Color( 100, 100, 100, 150 );
 
     private boolean isWhiteOnBot = true;
     private Position highlighted = null;
@@ -200,13 +202,13 @@ public class DrawField extends JPanel
                     {
                         g.setRenderingHints( hints ); //Damit Kreise nicht kacke aussehen
                         g.setStroke( new BasicStroke( 5 ) ); //Linienbreite
-                        if ( getBoard().isPieceAt( new Position( row, col ) ) ) //Wenn Figur geschlagen werden kann
+                        if ( getBoard().isPieceAt( Position.ofBoard( row, col ) ) ) //Wenn Figur geschlagen werden kann
                         {
-                            g.setColor( new Color( 255, 50, 50, 150 ) ); //dann roter kreis
+                            g.setColor( HIGHLIGHTED_ENEMY_CIRCLE ); //dann roter kreis
                         }
                         else
                         {
-                            g.setColor( new Color( 100, 100, 100, 150 ) ); //sonst grauer Kreis
+                            g.setColor( HIGHLIGHTED_MOVE_CIRCLE ); //sonst grauer Kreis
                         }
                         g.drawOval( col * 64, row * 64, 64, 64 );
                     }
