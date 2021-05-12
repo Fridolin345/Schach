@@ -1,4 +1,4 @@
-package de.schach;
+package de.schach.board;
 
 public enum PieceColor
 {

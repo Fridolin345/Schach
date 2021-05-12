@@ -1,4 +1,7 @@
-package de.schach;
+package de.schach.gui;
+
+import de.schach.board.*;
+import de.schach.logic.BoardLogic;
 
 import java.util.Set;
 

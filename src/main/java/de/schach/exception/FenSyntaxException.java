@@ -1,4 +1,4 @@
-package de.schach;
+package de.schach.exception;
 
 /**
  * <h1>Schach</h1>

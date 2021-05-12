@@ -1,9 +1,9 @@
-package de.schach;
+package de.schach.board;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.schach.PieceColor.*;
+import static de.schach.board.PieceColor.*;
 
 public enum Piece
 {
