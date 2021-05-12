@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class GUI extends JFrame
 {
-
+    public static DrawNotation notation = new DrawNotation();
     public GUI() throws IOException
     {
         this.setLayout( new BorderLayout() );
@@ -28,9 +28,18 @@ public class GUI extends JFrame
         leftSide.add( drawField );
         leftSide.setBorder( b2 );
 
+        JPanel rightSide = new JPanel();
+        rightSide.setPreferredSize( new Dimension(550, 800) );
+        rightSide.setLayout( null );
+        notation.setBounds( 0, 0, 550, 800 );
+        rightSide.add(notation);
+
+
+
         repaint();
         this.add( leftSide, BorderLayout.WEST );
-        this.add( new Button(), BorderLayout.CENTER );
+        //this.add( new Button(), BorderLayout.CENTER );
+        this.add(rightSide, BorderLayout.CENTER);
         this.setVisible( true ); //test
     }
 }

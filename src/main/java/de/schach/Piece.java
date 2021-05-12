@@ -35,7 +35,6 @@ public enum Piece
     private int spriteIndex;
     private PieceType pieceType;
     private PieceColor colorByte; //0b0001 = w / 0b0000 = b
-
     Piece( int spriteIndex, PieceType pieceType, PieceColor colorByte )
     {
         this.pieceType = pieceType;
@@ -58,6 +57,10 @@ public enum Piece
     public static PieceColor getColor( byte pieceData )
     {
         return ( pieceData & WHITE.getValue() ) == WHITE.getValue() ? WHITE : BLACK;
+    }
+
+    public void setColor(PieceColor color){
+        this.colorByte = color;
     }
 
     public static Piece fromByte( byte pieceData )
@@ -89,6 +92,5 @@ public enum Piece
     {
         return spriteIndex;
     }
-
 
 }
