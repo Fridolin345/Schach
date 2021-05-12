@@ -12,10 +12,22 @@ import static de.schach.board.PieceType.*;
 public class BoardLogic
 {
 
-    //Contains all valid moves for a piece at a given position
-    public static Set<Position> getAllValidMoves( Position position )
+    private Board board;
+
+    private BoardLogic( Board board )
     {
-        Piece piece = Board.getInstance().getPiece( position );
+        this.board = board;
+    }
+
+    public static BoardLogic ofBoard( Board board )
+    {
+        return new BoardLogic( board );
+    }
+
+    //Contains all valid moves for a piece at a given position
+    public Set<Position> getAllValidMoves( Position position )
+    {
+        Piece piece = board.getPiece( position );
         if ( piece == null ) return Collections.emptySet();
         List<de.schach.util.Vector> unblockedMoves = getUnblockedMoves( position, true );
         if ( piece.getPieceType() == PAWN ) fixPawn( position, unblockedMoves );
@@ -32,13 +44,13 @@ public class BoardLogic
     //includes move onto fields with opponent figures
     //does NOT exclude invalid KING moves yet
     //does NOT exclude invalid PAWN moves yet
-    private static List<de.schach.util.Vector> getUnblockedMoves( Position position, boolean checkBlocking )
+    private List<de.schach.util.Vector> getUnblockedMoves( Position position, boolean checkBlocking )
     {
         List<de.schach.util.Vector> unblocked = new LinkedList<>();
-        Piece piece = Board.getInstance().getPiece( position );
+        Piece piece = board.getPiece( position );
         if ( piece == null ) return Collections.emptyList();
         PieceColor color = piece.getColor();
-        Set<de.schach.util.Vector> moveVectors = piece.getPieceType().getMoveVectors( Board.getInstance().getOffensiveDirection( piece.getColor() ) );
+        Set<de.schach.util.Vector> moveVectors = piece.getPieceType().getMoveVectors( board.getOffensiveDirection( piece.getColor() ) );
         Debug.log( Arrays.toString( moveVectors.toArray() ) );
         for ( de.schach.util.Vector moveVector : moveVectors )
         {
@@ -52,7 +64,7 @@ public class BoardLogic
                 int canMove = canMoveHere( color, position, current );
                 if ( canMove == -1 && checkBlocking ) break; //own figure
                 unblocked.add( current );
-                if ( canMove == 1 && ( Board.getInstance().getPiece( position.move( current ) ).getPieceType() != KING || checkBlocking ) )
+                if ( canMove == 1 && ( board.getPiece( position.move( current ) ).getPieceType() != KING || checkBlocking ) )
                     break; //opponent figure there;
                 if ( piece.getPieceType().isOnlyOneStep() ) break;
             }
@@ -63,33 +75,33 @@ public class BoardLogic
 
     //whether a figure is allowed to move there by movement rules
     //no checks for in between or blocking
-    private static int canMoveHere( PieceColor color, Position start, de.schach.util.Vector move )
+    private int canMoveHere( PieceColor color, Position start, de.schach.util.Vector move )
     {
-        return !Board.getInstance().isPieceAt( start.move( move ) ) ? 0 : ( Board.getInstance().getPiece( start.move( move ) ).getColor().invert() == color ? 1 : -1 );
+        return !board.isPieceAt( start.move( move ) ) ? 0 : ( board.getPiece( start.move( move ) ).getColor().invert() == color ? 1 : -1 );
     }
 
     //helper method to fix king movement - king can't move onto covered fields
-    private static void fixKing( PieceColor color, Set<Position> unblockedMoves )
+    private void fixKing( PieceColor color, Set<Position> unblockedMoves )
     {
         Set<Position> coverage = getCoverage( color.invert() );
         unblockedMoves.removeIf( coverage::contains );
     }
 
     //helper method to fix pawn movement - pawn can only move diagonally when able to strike opponent
-    private static void fixPawn( Position pos, List<Vector> unblockedMoves )
+    private void fixPawn( Position pos, List<Vector> unblockedMoves )
     {
-        unblockedMoves.removeIf( vec -> vec.getAbsX() == 1 && !Board.getInstance().isPieceAt( pos.move( vec ) ) );
+        unblockedMoves.removeIf( vec -> vec.getAbsX() == 1 && !board.isPieceAt( pos.move( vec ) ) );
     }
 
     //get all covered positions by the given color
-    private static Set<Position> getCoverage( PieceColor color )
+    private Set<Position> getCoverage( PieceColor color )
     {
         Set<Position> positions = new HashSet<>();
         Position start = Position.ofBoard( 0, 0 );
         start.iterateTo( Position.ofBoard( 7, 7 ), pos ->
         {
-            if ( !Board.getInstance().isPieceAt( pos ) ) return;
-            Piece piece = Board.getInstance().getPiece( pos );
+            if ( !board.isPieceAt( pos ) ) return;
+            Piece piece = board.getPiece( pos );
             if ( piece.getColor() != color ) return;
             if ( piece.getPieceType() == KING )
                 positions.addAll( getUnblockedMoves( pos, false ).stream().map( pos::move ).collect( Collectors.toSet() ) );
@@ -100,7 +112,6 @@ public class BoardLogic
         } );
         return positions;
     }
-
 
 
 }

@@ -1,7 +1,6 @@
 package de.schach.gui;
 
 import de.schach.board.*;
-import de.schach.logic.BoardLogic;
 
 import java.util.Set;
 
@@ -51,7 +50,7 @@ public class Move
         }
 
         beforeboard.setPiece( endPos, temp );
-        Set<Position> pMoves = BoardLogic.getAllValidMoves( endPos ); //Wo wird da das Brett berücksichtigt? Wird da nur das Haupt-Brett angeschaut?
+        Set<Position> pMoves = beforeboard.getLogic().getAllValidMoves( endPos ); //Wo wird da das Brett berücksichtigt? Wird da nur das Haupt-Brett angeschaut?
 
         boolean considerRow = false;
         boolean considerCol = false;

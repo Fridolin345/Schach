@@ -1,6 +1,7 @@
 package de.schach.board;
 
 import de.schach.exception.FenSyntaxException;
+import de.schach.logic.BoardLogic;
 import de.schach.util.ArrayUtil;
 import de.schach.util.Vector;
 
@@ -8,13 +9,6 @@ import java.util.Scanner;
 
 public class Board
 {
-
-    private static Board instance = new Board();
-
-    public static Board getInstance()
-    {
-        return instance;
-    }
 
     private byte[] board;
     private PieceColor topColor;
@@ -27,6 +21,21 @@ public class Board
     private Board( byte[] board )
     {
         this.board = board;
+    }
+
+    public static Board create( Board board )
+    {
+        return new Board( board.board );
+    }
+
+    public static Board create( byte[] board )
+    {
+        return new Board( board );
+    }
+
+    public static Board create()
+    {
+        return new Board();
     }
 
     public void reset()
@@ -42,6 +51,11 @@ public class Board
     public Board getInvertedCopy()
     {
         return new Board( ArrayUtil.rowFlippedBoard( this.board ) );
+    }
+
+    public BoardLogic getLogic()
+    {
+        return BoardLogic.ofBoard( this );
     }
 
     public Piece getPiece( Position position )

@@ -1,7 +1,6 @@
 package de.schach.gui;
 
 import de.schach.board.*;
-import de.schach.logic.BoardLogic;
 import de.schach.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -11,12 +10,14 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.function.Consumer;
 
 
 public class DrawField extends JPanel
 {
+
     //Boardvariables
     public static final Color WHITE_FIELD_COLOR = new Color( 235, 235, 208 );
     public static final Color BLACK_FIELD_COLOR = new Color( 119, 148, 85 );
@@ -24,8 +25,10 @@ public class DrawField extends JPanel
     public static final Color HIGHLIGHTED_ENEMY_CIRCLE = new Color( 255, 50, 50, 150 );
     public static final Color HIGHLIGHTED_MOVE_CIRCLE = new Color( 100, 100, 100, 150 );
 
-    private boolean isWhiteOnBot = true;
     private Position highlighted = null;
+
+    private Board currentGameBoard;
+    private Board currentViewBoard;
 
     //chess Piece-images
     private BufferedImage spritesheet = ImageIO.read( new File( "assets\\chess.png" ) );
@@ -58,22 +61,33 @@ public class DrawField extends JPanel
         this.addMouseMotionListener( dragListener );
     }
 
+    public void setCurrentView( Board board )
+    {
+        currentViewBoard = board;
+    }
+
+    public boolean isCurrentlyViewing()
+    {
+        return currentViewBoard != null;
+    }
+
     public Board getBoard()
     {
-        return isWhiteOnBot ? Board.getInstance() : Board.getInstance().getInvertedCopy();
+        return isCurrentlyViewing() ? currentViewBoard : currentGameBoard;
+    }
+
+    public boolean isWhiteOnBot()
+    {
+        return getBoard().topColor() == PieceColor.BLACK;
     }
 
     public void fieldClicked( Position position )
     {
-        //System.out.println( position + " -> " + piece.map( Enum::name ).orElse( "EMPTY FIELD" ) );
         highlighted = position;
 
         if ( moveStartpos == null )//Keine Figur ausgewählt zum fahren
         {
-            for ( int i = 0; i < possMovesField.length; i++ )
-            {
-                possMovesField[i] = false;
-            }
+            Arrays.fill( possMovesField, false );
         }
 
         if ( moveStartpos == null ) //Kein Feld ausgewählt
@@ -82,7 +96,7 @@ public class DrawField extends JPanel
             {
                 //Noch prüfen ob deine Farbe aber es gibt noch keine Variable
                 //"OpponentRow" muss auch noch dementsprechend angepasst werden
-                Set<Position> pMoves = BoardLogic.getAllValidMoves( position );
+                Set<Position> pMoves = getBoard().getLogic().getAllValidMoves( position );
                 for ( Position p : pMoves )
                 {
                     possMovesField[p.getRow() * 8 + p.getColumn()] = true;
@@ -95,19 +109,14 @@ public class DrawField extends JPanel
             if ( possMovesField[position.getRow() * 8 + position.getColumn()] ) //Kann auf ausgewähltes Feld fahren
             {
                 move( moveStartpos, position );
-                for ( int i = 0; i < possMovesField.length; i++ )
-                {
-                    possMovesField[i] = false;
-                }
+                Arrays.fill( possMovesField, false );
                 moveStartpos = null;
                 repaint();
+                return;
             }
             else //Kann nicht auf ausgewähltes Feld fahren
             {
-                for ( int i = 0; i < possMovesField.length; i++ )
-                {
-                    possMovesField[i] = false;
-                }
+                Arrays.fill( possMovesField, false );
                 moveStartpos = null;
                 fieldClicked( position );
             }
@@ -118,18 +127,13 @@ public class DrawField extends JPanel
 
     public void move( Position from, Position to )
     {
-        Board.getInstance().movePiece( isWhiteOnBot ? from : from.inverted(), isWhiteOnBot ? to : to.inverted() );
-        GUI.notation.addPlayMove(from, to, getBoard());
+        currentGameBoard.movePiece( from, to );
+        GUI.notation.addPlayMove( from, to, getBoard() );
     }
 
     public Vector getOffensiveDirection( PieceColor color )
     {
-        return isWhiteOnBot == ( color == PieceColor.WHITE ) ? new Vector( 0, -1 ) : new Vector( 0, 1 );
-    }
-
-    public void setWhiteOnBot( boolean whiteOnBot )
-    {
-        isWhiteOnBot = whiteOnBot;
+        return isWhiteOnBot() == ( color == PieceColor.WHITE ) ? new Vector( 0, -1 ) : new Vector( 0, 1 );
     }
 
     public void paint( Graphics g )
@@ -142,7 +146,7 @@ public class DrawField extends JPanel
 
     private void drawBoard( Graphics2D g )
     {
-        boolean white = isWhiteOnBot;
+        boolean white = isWhiteOnBot();
         for ( int y = 0; y < 8; y++ )
         {
             for ( int x = 0; x < 8; x++ )
@@ -228,6 +232,7 @@ public class DrawField extends JPanel
     //Drag and Drop
     private class DragListener extends MouseMotionAdapter
     {
+
         public void mouseDragged( MouseEvent e )
         {
             if ( mouseIsPressed )
