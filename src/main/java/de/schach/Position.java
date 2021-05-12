@@ -31,7 +31,17 @@ public class Position implements Comparable<Position>
 
     public String toNotation()
     {
-        return FIELD[getColumn()] + String.valueOf( ( ( 7 - getRow() ) + 1 ) );
+        return colToNotation() + rowToNotation();
+    }
+
+    public String colToNotation()
+    {
+        return String.valueOf( FIELD[getColumn()] );
+    }
+
+    public String rowToNotation()
+    {
+        return String.valueOf( ( ( 7 - getRow() ) + 1 ) );
     }
 
     public int getColumn()
