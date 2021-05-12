@@ -107,7 +107,9 @@ public class DrawField extends JPanel
         }
         else //Schon Figur ausgewählt
         {
-            if ( possMovesField[position.getRow() * 8 + position.getColumn()] ) //Kann auf ausgewähltes Feld fahren
+            //Kann auf ausgewähltes Feld fahren
+            //wenn es nur eine temporäre Ansicht ist, soll die Figur nicht bewegt werden
+            if ( !isCurrentlyViewing() && possMovesField[position.getRow() * 8 + position.getColumn()] )
             {
                 move( moveStartpos, position );
                 Arrays.fill( possMovesField, false );
