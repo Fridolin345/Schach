@@ -1,19 +1,24 @@
 package de.schach.gui;
 
 import de.schach.board.*;
+import de.schach.logic.BoardLogic;
 import de.schach.util.Vector;
 
-import java.util.Set;
+import java.util.*;
+
+import static de.schach.board.Piece.*;
 
 public class Move
 {
 
     private final Position startPos;
     private final Position endPos;
-    private final Board beforeboard;
+    public final Board beforeboard;
 
     public Move( Position startPos, Position endPos, Board beforeboard )
     {
+        System.out.println( "new Move" );
+        System.out.println( "startPos: " + startPos.toNotation() + "  endPos: " + endPos.toNotation() );
         this.startPos = startPos;
         this.endPos = endPos;
         this.beforeboard = beforeboard;
@@ -34,15 +39,10 @@ public class Move
         return endPos;
     }
 
+
     public String getAcronym()
     {
-        String acronym = "";
-        Piece startPiece = beforeboard.getPiece( startPos );
-
-        if ( startPiece.getPieceType() != PieceType.PAWN )
-        {
-            acronym += startPiece.getPieceType().getNotationChar();
-        }
+        Piece startPiece = this.beforeboard.getPiece( startPos );
 
         boolean hits = false;
         if ( beforeboard.isPieceAt( endPos ) )
@@ -50,52 +50,78 @@ public class Move
             hits = true;
         }
 
-        //Wenn z.B. zwei Türme auf das selbe Feld fahren können, muss klar gemacht werden, welcher Turm gemeint ist
-        Piece temp = startPiece;
-        if ( startPiece.getColor() == PieceColor.WHITE ) //Farbe umdrehen, damit possibleMoves funktioniert
+        String acronym = "";
+        if ( startPiece.getPieceType() != PieceType.PAWN )
         {
-            temp.setColor( PieceColor.BLACK );
-        }
-        else
-        {
-            temp.setColor( PieceColor.WHITE );
-        }
+            acronym += startPiece.getPieceType().getNotationChar();
 
-        beforeboard.setPiece( endPos, temp );
-        Set<Position> pMoves = beforeboard.getLogic().getAllValidMoves( endPos ); //Wo wird da das Brett berücksichtigt? Wird da nur das Haupt-Brett angeschaut?
 
-        boolean considerRow = false;
-        boolean considerCol = false;
+            //Wenn z.B. zwei Türme auf das selbe Feld fahren können, muss klar gemacht werden, welcher Turm gemeint ist
+            Piece temp = getOtherColorPiece( startPiece );
+            System.out.println( temp.getColor() );
 
-        for ( Position p : pMoves )
-        {
-            if ( beforeboard.getPiece( p ) == startPiece && startPos != p )
+
+            Board tempBoard = new Board();
+            tempBoard.setBoard( beforeboard.getCopy( true ) );
+            tempBoard.setPiece( endPos, temp );
+            tempBoard.removePieceAt( startPos.getRow(), startPos.getColumn() );
+            System.out.println( "\n\n\n\n --------------------tempBoard:" );
+            new PrintMyField( tempBoard );
+            Set<Position> pMoves = tempBoard.getLogic().getAllValidMoves( endPos );
+
+            boolean considerRow = false;
+            boolean considerCol = false;
+
+            for ( Position p : pMoves )
             {
-                if ( p.getRow() == startPos.getRow() ) //Wenn Figuren in selber Reihe
+                if ( tempBoard.getPiece( p ) == startPiece )
                 {
-                    considerCol = true; //dann muss die Spalte bei der Notation angegeben werden
-                }
-                if ( p.getColumn() == startPos.getColumn() )
-                {
-                    considerRow = true;
+                    if ( p.getColumn() != startPos.getColumn() )
+                    {
+                        considerCol = true;
+                    }
+                    else
+                    {
+                        considerRow = true;
+                    }
+
                 }
             }
+            if ( considerCol )
+            {
+                acronym += startPos.colToNotation();
+            }
+            if ( considerRow )
+            {
+                acronym += startPos.rowToNotation();
+            }
+            if ( hits )
+            {
+                acronym += "x";
+            }
         }
-        if ( considerCol )
-        {
-            acronym += startPos.colToNotation();
-        }
-        if ( considerRow )
-        {
-            acronym += startPos.rowToNotation();
-        }
-        if ( hits )
-        {
-            acronym += "x";
-        }
-        acronym += endPos.toNotation();
+        else
+        { //Wenn es ein Bauer ist
+            if ( hits )
+            {
+                acronym += startPos.colToNotation();
 
-        System.out.println( acronym );
+                acronym += "x";
+            }
+        }
+
+
+    acronym +=endPos.toNotation();
+
+        System.out.println(acronym );
         return acronym;
+}
+
+    Piece getOtherColorPiece( Piece piece )
+    {
+        ArrayList<Piece> firstcolor = new ArrayList<>();
+        boolean b = Collections.addAll( firstcolor, WKING, WQUEEN, WBISHOP, WKNIGHT, WROCK, WPAWN, BKING, BQUEEN, BBISHOP, BKNIGHT, BROCK, BPAWN );
+        Piece[] othercolor = { BKING, BQUEEN, BBISHOP, BKNIGHT, BROCK, BPAWN, WKING, WQUEEN, WBISHOP, WKNIGHT, WROCK, WPAWN };
+        return othercolor[firstcolor.indexOf( piece )];
     }
 }

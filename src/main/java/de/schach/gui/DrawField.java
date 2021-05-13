@@ -130,8 +130,8 @@ public class DrawField extends JPanel
 
     public void move( Position from, Position to )
     {
+        GUI.notation.addPlayMove( from, to, getBoard().getCopy());
         currentGameBoard.movePiece( from, to );
-        GUI.notation.addPlayMove( from, to, getBoard() );
     }
 
     public Vector getOffensiveDirection( PieceColor color )
@@ -230,6 +230,7 @@ public class DrawField extends JPanel
         Position end = Position.ofScreen( 7, 7 );
         start.iterateTo( end, forEach );
     }
+
 
 
     //Drag and Drop

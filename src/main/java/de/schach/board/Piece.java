@@ -1,5 +1,7 @@
 package de.schach.board;
 
+//import com.sun.java.swing.plaf.windows.WindowsDesktopPaneUI;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,8 +62,38 @@ public enum Piece
     }
 
     public void setColor(PieceColor color){
-        this.colorByte = color;
+
     }
+
+    public Piece newPiece(PieceType pt, PieceColor pc){
+        int spriteInd = 0;
+        switch ( pt ){
+            case KING:
+                spriteInd = 0;
+                break;
+            case QUEEN:
+                spriteInd = 0;
+                break;
+            case BISHOP:
+                spriteInd = 0;
+                break;
+            case KNIGHT:
+                spriteInd = 0;
+                break;
+            case ROCK:
+                spriteInd = 0;
+                break;
+            case PAWN:
+                spriteInd = 0;
+                break;
+        }
+        if(pc == PieceColor.BLACK){
+            spriteInd += 6;
+        }
+        return WPAWN;
+        //return Piece.fromByte(  );
+    }
+
 
     public static Piece fromByte( byte pieceData )
     {

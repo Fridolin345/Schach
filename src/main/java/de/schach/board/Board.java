@@ -13,7 +13,7 @@ public class Board
     private byte[] board;
     private PieceColor topColor;
 
-    private Board()
+    public Board()
     {
         loadFromFen( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" );
     }
@@ -72,6 +72,30 @@ public class Board
     public void setPiece( Position position, Piece piece )
     {
         board[position.getBoardPosition()] = piece == null ? 0 : piece.toByte();
+    }
+
+    public Board getCopy()
+    {
+        Board copyB = new Board();
+        for(int row = 0; row<8; row++){
+            for(int col = 0; col<8; col++){
+                copyB.setPiece( new Position( row, col ), this.getPiece( new Position( row, col ) ) );
+            }
+        }
+        return copyB;
+    }
+    public byte[] getCopy(boolean byteForm)
+    {
+        byte[] copyB = new byte[8*8];
+        for(int row = 0; row<8; row++){
+            for(int col = 0; col<8; col++){
+                if(isPieceAt( new Position( row, col ) ))
+                {
+                    copyB[row * 8 + col] = this.getPiece( new Position( row, col ) ).toByte();
+                }
+            }
+        }
+        return copyB;
     }
 
     public void movePiece( Position from, Position to )
@@ -151,14 +175,10 @@ public class Board
 
     }
 
-    public void move( int startRow, int startCol, int endRow, int endCol )
-    {
-
-    }
-
     public void removePieceAt( int row, int col )
     {
         board[row * 8 + col] = 0;
-
     }
+
+
 }
