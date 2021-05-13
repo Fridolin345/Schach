@@ -55,18 +55,13 @@ public class Move
         {
             acronym += startPiece.getPieceType().getNotationChar();
 
-
             //Wenn z.B. zwei Türme auf das selbe Feld fahren können, muss klar gemacht werden, welcher Turm gemeint ist
             Piece temp = getOtherColorPiece( startPiece );
-            System.out.println( temp.getColor() );
-
 
             Board tempBoard = new Board();
-            tempBoard.setBoard( beforeboard.getCopy( true ) );
+            tempBoard.setBoard( this.beforeboard.getCopy( true ) );
             tempBoard.setPiece( endPos, temp );
             tempBoard.removePieceAt( startPos.getRow(), startPos.getColumn() );
-            System.out.println( "\n\n\n\n --------------------tempBoard:" );
-            new PrintMyField( tempBoard );
             Set<Position> pMoves = tempBoard.getLogic().getAllValidMoves( endPos );
 
             boolean considerRow = false;
@@ -105,17 +100,12 @@ public class Move
             if ( hits )
             {
                 acronym += startPos.colToNotation();
-
                 acronym += "x";
             }
         }
-
-
-    acronym +=endPos.toNotation();
-
-        System.out.println(acronym );
+        acronym += endPos.toNotation();
         return acronym;
-}
+    }
 
     Piece getOtherColorPiece( Piece piece )
     {

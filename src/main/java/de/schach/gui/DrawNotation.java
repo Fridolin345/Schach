@@ -24,20 +24,9 @@ public class DrawNotation extends JPanel
 
     public void addPlayMove( Position startPos, Position endPos, Board beforeBoard )
     {
-        moveCount++;
         Move m = new Move( startPos, endPos, beforeBoard.getCopy() );
-        System.out.println("\n\nCount: " + moveCount);
-
-        System.out.println("\nm.beforeBoard");
-        new PrintMyField( m.beforeboard );
-
         buttons.get( moveCount ).setText( m.getAcronym() );
-        JButton b = new JButton(m.getAcronym()+"ok");
-        playNotation.add(b);
-
-        System.out.println("\nm.beforeboard:");
-        new PrintMyField( m.beforeboard );
-
+        moveCount++;
         repaint();
     }
 
