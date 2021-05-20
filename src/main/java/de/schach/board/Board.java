@@ -2,9 +2,9 @@ package de.schach.board;
 
 import de.schach.exception.FenSyntaxException;
 import de.schach.logic.BoardLogic;
-import de.schach.util.ArrayUtil;
-import de.schach.util.Vector;
+import de.schach.util.*;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Board
@@ -13,7 +13,7 @@ public class Board
     private byte[] board;
     private PieceColor topColor;
     private Position enPassantPosition = null;
-    private boolean[] allowedCastles; // [K,Q,k,q]
+    private boolean[] allowedCastles = new boolean[4]; // [K,Q,k,q]
 
     public Board()
     {
@@ -25,6 +25,8 @@ public class Board
         this.board = board.board;
         this.enPassantPosition = board.enPassantPosition;
         this.topColor = board.topColor;
+        this.allowedCastles = board.allowedCastles;
+        this.enPassantPosition = board.enPassantPosition;
     }
 
     public static Board create( Board board )
@@ -59,9 +61,16 @@ public class Board
         return BoardLogic.ofBoard( this );
     }
 
+    public boolean isEnPassant( Position position )
+    {
+        return position.equals( this.enPassantPosition );
+    }
+
     public void setEnPassantPosition( Position enPassantPosition )
     {
         this.enPassantPosition = enPassantPosition;
+        Debug.log( "New EnPassant position:" );
+        Debug.log( this.enPassantPosition );
     }
 
     public void unsetEnPassantPosition()
@@ -129,8 +138,10 @@ public class Board
 
     public void movePiece( Position from, Position to )
     {
-        setPiece( to, getPiece( from ) );
+        Piece piece = getPiece( from );
+        setPiece( to, piece );
         setPiece( from, null );
+        getLogic().postMoveChanges( piece, from, from.getDiff( to ) );
     }
 
     public PieceColor topColor()
@@ -171,6 +182,7 @@ public class Board
         else topColor = PieceColor.WHITE;
 
         //Castles
+        Arrays.fill( allowedCastles, false );
         if ( !settings[1].equalsIgnoreCase( "-" ) )
         {
             for ( int i = 0; i < settings[1].length(); i++ )
@@ -198,6 +210,7 @@ public class Board
         {
             this.enPassantPosition = Position.ofNotation( settings[2] );
         }
+        else this.enPassantPosition = null;
 
         String[] ranks = squares.split( "/" );
 

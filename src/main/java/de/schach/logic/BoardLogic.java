@@ -36,6 +36,36 @@ public class BoardLogic
         return positions;
     }
 
+    public void postMoveChanges( Piece piece, Position origin, Vector move )
+    {
+
+        Position newPosition = origin.move( move );
+
+        //check EnPassant
+        if ( board.isEnPassant( newPosition ) && piece.getPieceType() == PAWN )
+        {
+            Vector offensiveDirection = board.getOffensiveDirection( piece.getColor().invert() );
+            board.setPiece( newPosition.move( offensiveDirection ), null );
+            board.unsetEnPassantPosition();
+            return;
+        }
+        //setEnPassant
+        if ( move.getAbsY() == 2 && piece.getPieceType() == PAWN )
+        {
+            Vector offensiveDirection = board.getOffensiveDirection( piece.getColor() );
+            board.setEnPassantPosition( origin.move( offensiveDirection ) );
+            return;
+        }
+
+        board.unsetEnPassantPosition();
+
+        if ( piece.getPieceType() == KING )
+        {
+            board.setNotAllowedToCastle( piece.getColor(), false );
+            board.setNotAllowedToCastle( piece.getColor(), true );
+        }
+
+    }
 
     //---------------------------------------- Helper Functions -----------------------------------------------------
 
@@ -87,10 +117,10 @@ public class BoardLogic
         unblockedMoves.removeIf( coverage::contains );
     }
 
-    //helper method to fix pawn movement - pawn can only move diagonally when able to strike opponent
+    //helper method to fix pawn movement - pawn can only move diagonally when able to strike opponent or enPassant
     private void fixPawn( Position pos, List<Vector> unblockedMoves )
     {
-        unblockedMoves.removeIf( vec -> vec.getAbsX() == 1 && !board.isPieceAt( pos.move( vec ) ) );
+        unblockedMoves.removeIf( vec -> vec.getAbsX() == 1 && !board.isPieceAt( pos.move( vec ) ) && !board.isEnPassant( pos.move( vec ) ) );
     }
 
     //get all covered positions by the given color
