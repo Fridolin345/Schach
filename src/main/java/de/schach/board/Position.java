@@ -3,6 +3,7 @@ package de.schach.board;
 import de.schach.util.Vector;
 import lombok.ToString;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 @ToString
@@ -28,6 +29,17 @@ public class Position implements Comparable<Position>
     public static Position ofBoard( int row, int column )
     {
         return new Position( row, column );
+    }
+
+    public static Position ofNotation( String notation )
+    {
+        char first = notation.charAt( 0 );
+        char second = notation.charAt( 1 );
+        int col = Arrays.binarySearch( FIELD, first );
+        int row = Integer.parseInt( String.valueOf( second ) );
+        //change to internal board coords
+        row = 8 - row;
+        return Position.ofBoard( row, col );
     }
 
     public String toNotation()

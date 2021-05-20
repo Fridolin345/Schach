@@ -1,12 +1,9 @@
 package de.schach.gui;
 
 import de.schach.board.*;
-import de.schach.logic.BoardLogic;
 import de.schach.util.Vector;
 
-import java.util.*;
-
-import static de.schach.board.Piece.*;
+import java.util.Set;
 
 public class Move
 {
@@ -38,7 +35,6 @@ public class Move
     {
         return endPos;
     }
-
 
     public String getAcronym()
     {
@@ -109,9 +105,7 @@ public class Move
 
     Piece getOtherColorPiece( Piece piece )
     {
-        ArrayList<Piece> firstcolor = new ArrayList<>();
-        boolean b = Collections.addAll( firstcolor, WKING, WQUEEN, WBISHOP, WKNIGHT, WROCK, WPAWN, BKING, BQUEEN, BBISHOP, BKNIGHT, BROCK, BPAWN );
-        Piece[] othercolor = { BKING, BQUEEN, BBISHOP, BKNIGHT, BROCK, BPAWN, WKING, WQUEEN, WBISHOP, WKNIGHT, WROCK, WPAWN };
-        return othercolor[firstcolor.indexOf( piece )];
+        return piece.invertColor();
     }
+
 }

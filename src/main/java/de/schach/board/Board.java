@@ -12,23 +12,22 @@ public class Board
 
     private byte[] board;
     private PieceColor topColor;
+    private Position enPassantPosition = null;
+    private boolean[] allowedCastles; // [K,Q,k,q]
 
     public Board()
     {
         loadFromFen( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" );
     }
 
-    private Board( byte[] board )
+    private Board( Board board )
     {
-        this.board = board;
+        this.board = board.board;
+        this.enPassantPosition = board.enPassantPosition;
+        this.topColor = board.topColor;
     }
 
     public static Board create( Board board )
-    {
-        return new Board( board.board );
-    }
-
-    public static Board create( byte[] board )
     {
         return new Board( board );
     }
@@ -50,12 +49,37 @@ public class Board
 
     public Board getInvertedCopy()
     {
-        return new Board( ArrayUtil.rowFlippedBoard( this.board ) );
+        Board board = new Board( this );
+        board.board = ArrayUtil.rowFlippedBoard( this.board );
+        return board;
     }
 
     public BoardLogic getLogic()
     {
         return BoardLogic.ofBoard( this );
+    }
+
+    public void setEnPassantPosition( Position enPassantPosition )
+    {
+        this.enPassantPosition = enPassantPosition;
+    }
+
+    public void unsetEnPassantPosition()
+    {
+        this.enPassantPosition = null;
+    }
+
+    public boolean isAllowedToCastle( PieceColor color, boolean kingSide )
+    {
+        return kingSide ? allowedCastles[( color == PieceColor.BLACK ? 2 : 0 )] : allowedCastles[( color == PieceColor.BLACK ? 3 : 1 )];
+    }
+
+    public void setNotAllowedToCastle( PieceColor color, boolean kingSide )
+    {
+        if ( kingSide )
+            allowedCastles[( color == PieceColor.BLACK ? 2 : 0 )] = false;
+        else
+            allowedCastles[( color == PieceColor.BLACK ? 3 : 1 )] = false;
     }
 
     public Piece getPiece( Position position )
@@ -77,19 +101,24 @@ public class Board
     public Board getCopy()
     {
         Board copyB = new Board();
-        for(int row = 0; row<8; row++){
-            for(int col = 0; col<8; col++){
+        for ( int row = 0; row < 8; row++ )
+        {
+            for ( int col = 0; col < 8; col++ )
+            {
                 copyB.setPiece( new Position( row, col ), this.getPiece( new Position( row, col ) ) );
             }
         }
         return copyB;
     }
-    public byte[] getCopy(boolean byteForm)
+
+    public byte[] getCopy( boolean byteForm )
     {
-        byte[] copyB = new byte[8*8];
-        for(int row = 0; row<8; row++){
-            for(int col = 0; col<8; col++){
-                if(isPieceAt( new Position( row, col ) ))
+        byte[] copyB = new byte[8 * 8];
+        for ( int row = 0; row < 8; row++ )
+        {
+            for ( int col = 0; col < 8; col++ )
+            {
+                if ( isPieceAt( new Position( row, col ) ) )
                 {
                     copyB[row * 8 + col] = this.getPiece( new Position( row, col ) ).toByte();
                 }
@@ -136,9 +165,39 @@ public class Board
 
         String[] settings = data.split( " " ); //TODO later, just skip it currently
 
+        //Who's turn
         if ( settings[0].equalsIgnoreCase( "w" ) )
             topColor = PieceColor.BLACK;
         else topColor = PieceColor.WHITE;
+
+        //Castles
+        if ( !settings[1].equalsIgnoreCase( "-" ) )
+        {
+            for ( int i = 0; i < settings[1].length(); i++ )
+            {
+                switch ( settings[1].charAt( i ) )
+                {
+                    case 'K':
+                        allowedCastles[0] = true;
+                        break;
+                    case 'Q':
+                        allowedCastles[1] = true;
+                        break;
+                    case 'k':
+                        allowedCastles[2] = true;
+                        break;
+                    case 'q':
+                        allowedCastles[3] = true;
+                        break;
+                }
+            }
+        }
+
+        //EnPassant
+        if ( !settings[2].equalsIgnoreCase( "-" ) )
+        {
+            this.enPassantPosition = Position.ofNotation( settings[2] );
+        }
 
         String[] ranks = squares.split( "/" );
 
@@ -163,7 +222,7 @@ public class Board
                     char pieceToken = scanner.next().charAt( 0 );
                     PieceType type = PieceType.fromChar( Character.toLowerCase( pieceToken ) );
                     PieceColor color = Character.isUpperCase( pieceToken ) ? PieceColor.WHITE : PieceColor.BLACK;
-                    Piece piece = Piece.fromPartialData( type, color );
+                    Piece piece = Piece.getPiece( type, color );
                     board[currentField++] = piece.toByte();
                 }
                 else

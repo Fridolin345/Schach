@@ -37,6 +37,7 @@ public enum Piece
     private int spriteIndex;
     private PieceType pieceType;
     private PieceColor colorByte; //0b0001 = w / 0b0000 = b
+
     Piece( int spriteIndex, PieceType pieceType, PieceColor colorByte )
     {
         this.pieceType = pieceType;
@@ -44,7 +45,7 @@ public enum Piece
         this.colorByte = colorByte;
     }
 
-    public static Piece fromPartialData( PieceType pieceType, PieceColor color )
+    public static Piece getPiece( PieceType pieceType, PieceColor color )
     {
         for ( Piece piece : values() )
         {
@@ -56,44 +57,10 @@ public enum Piece
         return null;
     }
 
-    public static PieceColor getColor( byte pieceData )
+    public Piece invertColor()
     {
-        return ( pieceData & WHITE.getValue() ) == WHITE.getValue() ? WHITE : BLACK;
+        return fromByte( (byte) ( getPieceType().getRepresentative() | getColor().invert().getValue() ) );
     }
-
-    public void setColor(PieceColor color){
-
-    }
-
-    public Piece newPiece(PieceType pt, PieceColor pc){
-        int spriteInd = 0;
-        switch ( pt ){
-            case KING:
-                spriteInd = 0;
-                break;
-            case QUEEN:
-                spriteInd = 0;
-                break;
-            case BISHOP:
-                spriteInd = 0;
-                break;
-            case KNIGHT:
-                spriteInd = 0;
-                break;
-            case ROCK:
-                spriteInd = 0;
-                break;
-            case PAWN:
-                spriteInd = 0;
-                break;
-        }
-        if(pc == PieceColor.BLACK){
-            spriteInd += 6;
-        }
-        return WPAWN;
-        //return Piece.fromByte(  );
-    }
-
 
     public static Piece fromByte( byte pieceData )
     {
@@ -123,6 +90,11 @@ public enum Piece
     public int getSpriteIndex()
     {
         return spriteIndex;
+    }
+
+    public static PieceColor getPieceColor( byte pieceData )
+    {
+        return ( pieceData & WHITE.getValue() ) == WHITE.getValue() ? WHITE : BLACK;
     }
 
 }
