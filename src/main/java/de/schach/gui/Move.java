@@ -1,9 +1,12 @@
 package de.schach.gui;
 
 import de.schach.board.*;
+import de.schach.logic.BoardLogic;
 import de.schach.util.Vector;
 
-import java.util.Set;
+import java.util.*;
+
+import static de.schach.board.Piece.*;
 
 public class Move
 {
@@ -36,15 +39,12 @@ public class Move
         return endPos;
     }
 
+
     public String getAcronym()
     {
         Piece startPiece = this.beforeboard.getPiece( startPos );
 
-        boolean hits = false;
-        if ( beforeboard.isPieceAt( endPos ) )
-        {
-            hits = true;
-        }
+        boolean hits = beforeboard.isPieceAt( endPos );
 
         String acronym = "";
         if ( startPiece.getPieceType() != PieceType.PAWN )
@@ -105,7 +105,15 @@ public class Move
 
     Piece getOtherColorPiece( Piece piece )
     {
-        return piece.invertColor();
+        ArrayList<Piece> firstcolor = new ArrayList<>();
+        boolean b = Collections.addAll( firstcolor, WKING, WQUEEN, WBISHOP, WKNIGHT, WROCK, WPAWN, BKING, BQUEEN, BBISHOP, BKNIGHT, BROCK, BPAWN );
+        Piece[] othercolor = { BKING, BQUEEN, BBISHOP, BKNIGHT, BROCK, BPAWN, WKING, WQUEEN, WBISHOP, WKNIGHT, WROCK, WPAWN };
+        return othercolor[firstcolor.indexOf( piece )];
     }
 
+
+    public boolean whiteIsMoving()
+    {
+        return (beforeboard.getPiece( startPos ).getColor() == PieceColor.WHITE);
+    }
 }
