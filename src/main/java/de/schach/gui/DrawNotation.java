@@ -5,8 +5,6 @@ import de.schach.board.Position;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class DrawNotation extends JPanel
@@ -44,6 +42,7 @@ public class DrawNotation extends JPanel
         {
             moveCount++;
             JButton moveCountButton = new JButton( String.valueOf( moveCount ) );
+            moveCountButton.setEnabled( false );
             moveCountButton.setBackground( Color.WHITE );
             moveCountButton.setPreferredSize( new Dimension( PLAY_MOVECOUNT_WEIDTH, PLAY_MOVE_HEIGHT ) );
             playMoveCounter.add( moveCountButton );
