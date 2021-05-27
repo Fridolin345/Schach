@@ -19,6 +19,8 @@ public class Board
     private Position enPassantPosition = null;
     private boolean[] allowedCastles = new boolean[4]; // [K,Q,k,q]
 
+    private PieceColor currentlyAtTurn;
+
     public Board()
     {
         loadFromFen( "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" );
@@ -30,6 +32,7 @@ public class Board
         this.enPassantPosition = board.enPassantPosition;
         this.allowedCastles = board.allowedCastles;
         this.enPassantPosition = board.enPassantPosition;
+        this.currentlyAtTurn = board.currentlyAtTurn;
     }
 
     public static Board createCopy( Board board )
@@ -102,7 +105,7 @@ public class Board
 
     public boolean isPieceAt( Position position )
     {
-        return board[position.getBoardPosition()] != 0;
+        return position != null && board[position.getBoardPosition()] != 0;
     }
 
     public void setPiece( Position position, Piece piece )
@@ -128,6 +131,19 @@ public class Board
         return PieceColor.BLACK;
     }
 
+    //changing turn, so the other player can move
+    //white -> black and black -> white
+    public void changeTurn()
+    {
+        currentlyAtTurn = currentlyAtTurn.invert();
+    }
+
+    //who is currently allowed to move a piece
+    public PieceColor whosTurn()
+    {
+        return currentlyAtTurn;
+    }
+
     public Vector getOffensiveDirection( PieceColor color )
     {
         return color == PieceColor.WHITE ? new Vector( 0, -1 ) : new Vector( 0, 1 );
@@ -135,11 +151,7 @@ public class Board
 
     public PieceColor pieceColorAt( Position position )
     {
-        if ( position == null )
-        {
-            return null;
-        }
-        return isPieceAt( position ) ? null : getPiece( position ).getColor();
+        return !isPieceAt( position ) ? null : getPiece( position ).getColor();
     }
 
     public void loadFromFen( String fen )
@@ -151,8 +163,10 @@ public class Board
 
         String[] settings = data.split( " " ); //TODO later, just skip it currently
 
-        boolean whitesTurn = settings[0].equalsIgnoreCase( "w" );
         //Who's turn
+        boolean whitesTurn = settings[0].equalsIgnoreCase( "w" );
+        currentlyAtTurn = whitesTurn ? PieceColor.WHITE : PieceColor.BLACK;
+        Debug.log( "currentTurn: " + currentlyAtTurn.name() );
 
         //Castles
         Arrays.fill( allowedCastles, false );
