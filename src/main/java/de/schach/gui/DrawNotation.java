@@ -4,14 +4,15 @@ import de.schach.board.Board;
 import de.schach.board.Position;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class DrawNotation extends JPanel
 {
 
-    JPanel AnalysisNotation = new JPanel();
 
+    Border border = BorderFactory.createLineBorder(Color.red, 2);
 
     int moveCount = 0;
     ArrayList<Move> playNotationWhite = new ArrayList<>();
@@ -29,12 +30,32 @@ public class DrawNotation extends JPanel
     final int PLAY_MOVECOUNT_WEIDTH = 100;
     final int PUFFER_SIZE = 5;
 
-    JPanel scroll = new JPanel();
-    JPanel panel = new JPanel();
-    JScrollPane scrollPane;
+    JPanel playScroll = new JPanel(); //Teil von playPanel
+    JPanel playPanel = new JPanel(); //im playScrollPane
+    JScrollPane playScrollPane; //der ganze Teil für die Play - Notation
+
+    JPanel analysisScroll = new JPanel();
+    JPanel analysisPanel = new JPanel();
+    JScrollPane analysisScrollPane;
 
 
-    public void addPlayMove( Position startPos, Position endPos, Board beforeBoard )
+    public DrawNotation()
+    {
+        initScrollBar();
+
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setBounds( 0, 0, 600, 800 );
+
+        layeredPane.add( playScrollPane, Integer.valueOf( 1 ));
+        layeredPane.add(analysisScroll, Integer.valueOf( 0 ));
+
+        this.setBounds( 0, 0, 600, 800 );
+        this.add( playScrollPane );
+        this.setBackground( Color.BLUE );
+        this.setVisible( true );
+    }
+
+    public void addPlayMove( Position startPos, Position endPos, Board beforeBoard ) //Wenn gerade gezogen wurde
     {
         Move m = new Move( startPos, endPos, beforeBoard ); //board is already a copy
 
@@ -78,38 +99,34 @@ public class DrawNotation extends JPanel
         playWhiteMoves.setBounds( PLAY_MOVECOUNT_WEIDTH + PUFFER_SIZE, 0, PLAY_MOVE_WIDTH + PUFFER_SIZE, moveCount * PLAY_MOVE_HEIGHT );
         playBlackMoves.setBounds( PLAY_MOVECOUNT_WEIDTH + PLAY_MOVE_WIDTH + PUFFER_SIZE * 2, 0, PLAY_MOVE_WIDTH + PUFFER_SIZE, moveCount * PLAY_MOVE_HEIGHT );
 
-        scrollPane.setVerticalScrollBar( new JScrollBar( Adjustable.VERTICAL ) );
-        scroll.setPreferredSize( new Dimension( 500, 2000 ) );
-        scrollPane.getVerticalScrollBar().setValue( 1 );
-        scroll.setPreferredSize( new Dimension( PLAY_MOVE_WIDTH * 2 + PLAY_MOVECOUNT_WEIDTH + +PUFFER_SIZE * 3, moveCount * PLAY_MOVE_HEIGHT ) );
-        scrollPane.getVerticalScrollBar().setValue( scrollPane.getVerticalScrollBar().getMaximum() );
+        playScrollPane.revalidate();
+        playScroll.setPreferredSize( new Dimension( PLAY_MOVE_WIDTH*2 + PLAY_MOVECOUNT_WEIDTH + +PUFFER_SIZE*3, moveCount * PLAY_MOVE_HEIGHT ) );
+        playScrollPane.getVerticalScrollBar().setValue( playScrollPane.getVerticalScrollBar().getMaximum());
     }
 
-    public DrawNotation()
-    {
-        initScrollBar();
-        this.add( scrollPane );
-        this.setBackground( Color.BLUE );
-        this.setVisible( true );
+
+
+    public void updateAllPlayMoves(){
+
     }
 
 
     void initScrollBar()
     {
-        panel.add( scroll );
-        scrollPane = new JScrollPane( panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
-        scrollPane.getVerticalScrollBar().setBlockIncrement( 1 );
-        scrollPane.getVerticalScrollBar().setUnitIncrement( 100 );
+        playPanel.add( playScroll );
+        playScrollPane = new JScrollPane( playPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER );
+        playScrollPane.getVerticalScrollBar().setBlockIncrement( 100 );
+        playScrollPane.getVerticalScrollBar().setUnitIncrement( 100 );
 
-        scroll.setPreferredSize( new Dimension( 300, 800 ) );
-        scrollPane.setPreferredSize( new Dimension( 500, 700 ) );
+        playScroll.setPreferredSize( new Dimension( 100, 100 ) );
+        playScrollPane.setPreferredSize( new Dimension( 500, 700 ) );
 
 
-        scroll.setLayout( null );
-        scroll.add( playMoveCounter );
-        scroll.add( playWhiteMoves );
-        scroll.add( playBlackMoves );
-
+        playScroll.setLayout( null );
+        playScroll.add( playMoveCounter );
+        playScroll.add( playWhiteMoves );
+        playScroll.add( playBlackMoves );
+        playPanel.setBorder( border );
         playWhiteMoves.setLayout( new FlowLayout( 0, 0, 0 ) );
         playBlackMoves.setLayout( new FlowLayout( 0, 0, 0 ) );
         playMoveCounter.setLayout( new FlowLayout( 0, 0, 0 ) );

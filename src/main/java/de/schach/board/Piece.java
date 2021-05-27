@@ -69,7 +69,12 @@ public enum Piece
 
     public PieceType getPieceType()
     {
-        return pieceType;
+        try
+        {
+            return pieceType;
+        } catch (Exception e){
+            return null;
+        }
     }
 
     public byte getColorByte()
@@ -79,7 +84,13 @@ public enum Piece
 
     public PieceColor getColor()
     {
-        return colorByte;
+        try
+        {
+            return colorByte;
+        } catch ( Exception e )
+        {
+            return null;
+        }
     }
 
     public byte toByte()

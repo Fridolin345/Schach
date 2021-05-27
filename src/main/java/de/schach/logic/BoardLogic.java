@@ -4,6 +4,7 @@ import de.schach.board.*;
 import de.schach.util.Debug;
 import de.schach.util.Vector;
 
+import javax.swing.plaf.metal.MetalIconFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -148,5 +149,52 @@ public class BoardLogic
         return positions;
     }
 
+
+    //
+    public boolean KingInCheck( PieceColor kingColor )
+    {
+        Set<Position> enemyMoves = getCoverage( kingColor.invert() );
+        if ( enemyMoves.contains( getKing( kingColor ) ) )
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+        public Position getKing( PieceColor kingColor )
+    {
+        ArrayList<Position> allMyPieces = this.getAllPiecesForOneColor( kingColor );
+        for ( Position p : allMyPieces )
+        {
+            Piece temp = this.board.getPiece( p );
+            if ( temp.getPieceType() == KING )
+            {
+                if ( temp.getColor() == kingColor )
+                {
+                    return p;
+                }
+            }
+        }
+        System.out.println( "König konnte nicht gefunden werden" );
+        return null;
+    }
+
+    public ArrayList<Position> getAllPiecesForOneColor( PieceColor pc )
+    {
+        ArrayList<Position> allPositions = new ArrayList<>();
+        for ( int row = 0; row < 8; row++ )
+        {
+            for ( int col = 0; col < 8; col++ )
+            {
+                Piece temp = this.board.getPiece( new Position( row, col ) );
+                if ( temp.getColor() == pc )
+                {
+                    allPositions.add( new Position( row, col ) );
+                }
+            }
+        }
+        return allPositions;
+    }
 
 }

@@ -37,7 +37,6 @@ public class GUI extends JFrame
         rightSide = new JPanel();
         rightSide.setPreferredSize( new Dimension( 550, 800 ) );
         rightSide.setLayout( null );
-        notation.setBounds( 0, 0, 600, 800 );
         rightSide.add( notation );
 
 
