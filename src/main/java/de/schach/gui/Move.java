@@ -128,7 +128,7 @@ public class Move
                     acronym += "=R";
                     break;
                 default:
-                    acronym += "=???";
+                    //acronym += "=???";
                     break;
             }
 
