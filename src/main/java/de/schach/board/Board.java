@@ -26,7 +26,7 @@ public class Board
 
     private Board( Board board )
     {
-        this.board = board.board;
+        this.board = Arrays.copyOf( board.board, board.board.length );
         this.enPassantPosition = board.enPassantPosition;
         this.allowedCastles = board.allowedCastles;
         this.enPassantPosition = board.enPassantPosition;

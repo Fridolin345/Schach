@@ -36,7 +36,7 @@ public class DrawNotation extends JPanel
 
     public void addPlayMove( Position startPos, Position endPos, Board beforeBoard )
     {
-        Move m = new Move( startPos, endPos, Board.createCopy( beforeBoard ) );
+        Move m = new Move( startPos, endPos, beforeBoard ); //board is already a copy
 
         if ( m.whiteIsMoving() )
         {
@@ -91,7 +91,6 @@ public class DrawNotation extends JPanel
         this.add( scrollPane );
         this.setBackground( Color.BLUE );
         this.setVisible( true );
-
     }
 
 

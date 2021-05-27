@@ -1,6 +1,7 @@
 package de.schach.gui;
 
 import de.schach.board.*;
+import de.schach.util.Debug;
 import de.schach.util.Vector;
 
 import java.util.*;
@@ -16,8 +17,8 @@ public class Move
 
     public Move( Position startPos, Position endPos, Board beforeboard )
     {
-        System.out.println( "new Move" );
-        System.out.println( "startPos: " + startPos.toNotation() + "  endPos: " + endPos.toNotation() );
+        Debug.log( "new Move" );
+        Debug.log( "startPos: " + startPos.toNotation() + ", endPos: " + endPos.toNotation() );
         this.startPos = startPos;
         this.endPos = endPos;
         this.beforeboard = beforeboard;
@@ -43,6 +44,9 @@ public class Move
         Piece startPiece = this.beforeboard.getPiece( startPos );
 
         boolean hits = beforeboard.isPieceAt( endPos );
+
+        Debug.log( "startLoc: " + startPiece );
+        Debug.log( "endLoc: " + beforeboard.getPiece( endPos ) );
 
         String acronym = "";
         if ( startPiece.getPieceType() != PieceType.PAWN )

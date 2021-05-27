@@ -62,6 +62,7 @@ public class BoardLogic
 
         if ( piece.getPieceType() == KING )
         {
+            //if king moves, he can no longer castle on both sides
             board.setNotAllowedToCastle( piece.getColor(), false );
             board.setNotAllowedToCastle( piece.getColor(), true );
         }
@@ -82,7 +83,7 @@ public class BoardLogic
         if ( piece == null ) return Collections.emptyList();
         PieceColor color = piece.getColor();
         Set<de.schach.util.Vector> moveVectors = piece.getPieceType().getMoveVectors( board.getOffensiveDirection( piece.getColor() ) );
-        Debug.log( Arrays.toString( moveVectors.toArray() ) );
+        Debug.log( "raw move vectors: " + Arrays.toString( moveVectors.toArray() ) );
         for ( de.schach.util.Vector moveVector : moveVectors )
         {
             de.schach.util.Vector base = ( piece.getPieceType() == PAWN && ( position.getRow() == 6 || position.getRow() == 1 ) ) ? moveVector : moveVector.toBaseVector();
