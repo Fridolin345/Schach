@@ -1,7 +1,6 @@
 package de.schach.gui;
 
 import de.schach.board.*;
-import de.schach.util.Debug;
 import de.schach.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -95,7 +94,6 @@ public class DrawField extends JPanel
         if ( moveStartpos == null ) //Kein Feld ausgewählt
         {
             //only figures that are currently at turn
-            Debug.log( "clicked piece is: " + getBoard().pieceColorAt( position ) + ", currentTurn: " + getBoard().whosTurn() );
             if ( getBoard().isPieceAt( position ) && getBoard().whosTurn() == getBoard().pieceColorAt( position ) )
             {
                 //Noch prüfen ob deine Farbe aber es gibt noch keine Variable

@@ -45,9 +45,6 @@ public class Move
 
         boolean hits = beforeboard.isPieceAt( endPos );
 
-        Debug.log( "startLoc: " + startPiece );
-        Debug.log( "endLoc: " + beforeboard.getPiece( endPos ) );
-
         String acronym = "";
         if ( startPiece.getPieceType() != PieceType.PAWN )
         {

@@ -75,8 +75,7 @@ public class Board
     public void setEnPassantPosition( Position enPassantPosition )
     {
         this.enPassantPosition = enPassantPosition;
-        Debug.log( "New EnPassant position:" );
-        Debug.log( this.enPassantPosition );
+        Debug.log( "New EnPassant position:" + this.enPassantPosition );
     }
 
     public void unsetEnPassantPosition()
