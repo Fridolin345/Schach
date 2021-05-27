@@ -49,6 +49,7 @@ public class BoardLogic
             board.unsetEnPassantPosition();
             return;
         }
+
         //setEnPassant
         if ( move.getAbsY() == 2 && piece.getPieceType() == PAWN )
         {
@@ -72,8 +73,8 @@ public class BoardLogic
 
     //a list of all moves that are not blocked by a figure on the board
     //includes move onto fields with opponent figures
-    //does NOT exclude invalid KING moves yet
-    //does NOT exclude invalid PAWN moves yet
+    //does NOT exclude invalid KING moves @see fixKing
+    //does NOT exclude invalid PAWN moves @see fixPawn
     private List<de.schach.util.Vector> getUnblockedMoves( Position position, boolean checkBlocking )
     {
         List<de.schach.util.Vector> unblocked = new LinkedList<>();
@@ -120,15 +121,18 @@ public class BoardLogic
     //helper method to fix pawn movement - pawn can only move diagonally when able to strike opponent or enPassant
     private void fixPawn( Position pos, List<Vector> unblockedMoves )
     {
+        //removes all diagonal non-enPassant moves
         unblockedMoves.removeIf( vec -> vec.getAbsX() == 1 && !board.isPieceAt( pos.move( vec ) ) && !board.isEnPassant( pos.move( vec ) ) );
+        //removes all straight forward moves, that are blocked by a piece / pawns cant fight moving forward
+        unblockedMoves.removeIf( vec -> vec.getAbsX() == 0 && board.isPieceAt( pos.move( vec ) ) );
     }
 
     //get all covered positions by the given color
     private Set<Position> getCoverage( PieceColor color )
     {
         Set<Position> positions = new HashSet<>();
-        Position start = Position.ofBoard( 0, 0 );
-        start.iterateTo( Position.ofBoard( 7, 7 ), pos ->
+        Position start = Board.TOP_LEFT_CORNER;
+        start.iterateTo( Board.BOTTOM_RIGHT_CORNER, pos ->
         {
             if ( !board.isPieceAt( pos ) ) return;
             Piece piece = board.getPiece( pos );

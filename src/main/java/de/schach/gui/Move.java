@@ -1,7 +1,6 @@
 package de.schach.gui;
 
 import de.schach.board.*;
-import de.schach.logic.BoardLogic;
 import de.schach.util.Vector;
 
 import java.util.*;
@@ -39,7 +38,6 @@ public class Move
         return endPos;
     }
 
-
     public String getAcronym()
     {
         Piece startPiece = this.beforeboard.getPiece( startPos );
@@ -54,10 +52,9 @@ public class Move
             //Wenn z.B. zwei Türme auf das selbe Feld fahren können, muss klar gemacht werden, welcher Turm gemeint ist
             Piece temp = getOtherColorPiece( startPiece );
 
-            Board tempBoard = new Board();
-            tempBoard.setBoard( this.beforeboard.getCopy( true ) );
+            Board tempBoard = Board.createCopy( beforeboard );
             tempBoard.setPiece( endPos, temp );
-            tempBoard.removePieceAt( startPos.getRow(), startPos.getColumn() );
+            tempBoard.removePiece( startPos );
             Set<Position> pMoves = tempBoard.getLogic().getAllValidMoves( endPos );
 
             boolean considerRow = false;
@@ -114,6 +111,6 @@ public class Move
 
     public boolean whiteIsMoving()
     {
-        return (beforeboard.getPiece( startPos ).getColor() == PieceColor.WHITE);
+        return ( beforeboard.getPiece( startPos ).getColor() == PieceColor.WHITE );
     }
 }

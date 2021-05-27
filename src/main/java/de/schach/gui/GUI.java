@@ -4,10 +4,7 @@ import de.schach.board.Board;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.IOException;
 
 public class GUI extends JFrame

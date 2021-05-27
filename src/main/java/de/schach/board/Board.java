@@ -10,8 +10,12 @@ import java.util.Scanner;
 public class Board
 {
 
+    public static final Position TOP_LEFT_CORNER = Position.ofBoard( 0, 0 );
+    public static final Position TOP_RIGHT_CORNER = Position.ofBoard( 0, 7 );
+    public static final Position BOTTOM_LEFT_CORNER = Position.ofBoard( 7, 0 );
+    public static final Position BOTTOM_RIGHT_CORNER = Position.ofBoard( 7, 7 );
+
     private byte[] board;
-    private PieceColor topColor;
     private Position enPassantPosition = null;
     private boolean[] allowedCastles = new boolean[4]; // [K,Q,k,q]
 
@@ -24,12 +28,11 @@ public class Board
     {
         this.board = board.board;
         this.enPassantPosition = board.enPassantPosition;
-        this.topColor = board.topColor;
         this.allowedCastles = board.allowedCastles;
         this.enPassantPosition = board.enPassantPosition;
     }
 
-    public static Board create( Board board )
+    public static Board createCopy( Board board )
     {
         return new Board( board );
     }
@@ -107,33 +110,9 @@ public class Board
         board[position.getBoardPosition()] = piece == null ? 0 : piece.toByte();
     }
 
-    public Board getCopy()
+    public void removePiece( Position position )
     {
-        Board copyB = new Board();
-        for ( int row = 0; row < 8; row++ )
-        {
-            for ( int col = 0; col < 8; col++ )
-            {
-                copyB.setPiece( new Position( row, col ), this.getPiece( new Position( row, col ) ) );
-            }
-        }
-        return copyB;
-    }
-
-    public byte[] getCopy( boolean byteForm )
-    {
-        byte[] copyB = new byte[8 * 8];
-        for ( int row = 0; row < 8; row++ )
-        {
-            for ( int col = 0; col < 8; col++ )
-            {
-                if ( isPieceAt( new Position( row, col ) ) )
-                {
-                    copyB[row * 8 + col] = this.getPiece( new Position( row, col ) ).toByte();
-                }
-            }
-        }
-        return copyB;
+        setPiece( position, null );
     }
 
     public void movePiece( Position from, Position to )
@@ -146,16 +125,12 @@ public class Board
 
     public PieceColor topColor()
     {
-        return topColor;
+        return PieceColor.BLACK;
     }
 
     public Vector getOffensiveDirection( PieceColor color )
     {
-        if ( topColor == PieceColor.BLACK )
-        {
-            return color == PieceColor.WHITE ? new Vector( 0, -1 ) : new Vector( 0, 1 );
-        }
-        else return color == PieceColor.WHITE ? new Vector( 0, 1 ) : new Vector( 0, -1 );
+        return color == PieceColor.WHITE ? new Vector( 0, -1 ) : new Vector( 0, 1 );
     }
 
     public PieceColor pieceColorAt( Position position )
@@ -176,10 +151,8 @@ public class Board
 
         String[] settings = data.split( " " ); //TODO later, just skip it currently
 
+        boolean whitesTurn = settings[0].equalsIgnoreCase( "w" );
         //Who's turn
-        if ( settings[0].equalsIgnoreCase( "w" ) )
-            topColor = PieceColor.BLACK;
-        else topColor = PieceColor.WHITE;
 
         //Castles
         Arrays.fill( allowedCastles, false );
@@ -214,6 +187,9 @@ public class Board
 
         String[] ranks = squares.split( "/" );
 
+        if ( !whitesTurn )
+            ArrayUtil.invertArray( ranks ); //black should always be top
+
         Scanner scanner;
         int currentField = 0;
         for ( String rank : ranks )
@@ -246,11 +222,5 @@ public class Board
         }
 
     }
-
-    public void removePieceAt( int row, int col )
-    {
-        board[row * 8 + col] = 0;
-    }
-
 
 }

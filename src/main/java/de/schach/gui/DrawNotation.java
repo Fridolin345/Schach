@@ -36,7 +36,7 @@ public class DrawNotation extends JPanel
 
     public void addPlayMove( Position startPos, Position endPos, Board beforeBoard )
     {
-        Move m = new Move( startPos, endPos, beforeBoard.getCopy() );
+        Move m = new Move( startPos, endPos, Board.createCopy( beforeBoard ) );
 
         if ( m.whiteIsMoving() )
         {
@@ -74,15 +74,15 @@ public class DrawNotation extends JPanel
             playNotationBlackString.add( m.getAcronym() );
         }
 
-        playMoveCounter.setBounds( 0, 0, PLAY_MOVECOUNT_WEIDTH+PUFFER_SIZE, moveCount*PLAY_MOVE_HEIGHT);
-        playWhiteMoves.setBounds( PLAY_MOVECOUNT_WEIDTH+PUFFER_SIZE, 0, PLAY_MOVE_WIDTH+PUFFER_SIZE, moveCount*PLAY_MOVE_HEIGHT );
-        playBlackMoves.setBounds( PLAY_MOVECOUNT_WEIDTH+ PLAY_MOVE_WIDTH+PUFFER_SIZE*2, 0, PLAY_MOVE_WIDTH+PUFFER_SIZE, moveCount*PLAY_MOVE_HEIGHT );
+        playMoveCounter.setBounds( 0, 0, PLAY_MOVECOUNT_WEIDTH + PUFFER_SIZE, moveCount * PLAY_MOVE_HEIGHT );
+        playWhiteMoves.setBounds( PLAY_MOVECOUNT_WEIDTH + PUFFER_SIZE, 0, PLAY_MOVE_WIDTH + PUFFER_SIZE, moveCount * PLAY_MOVE_HEIGHT );
+        playBlackMoves.setBounds( PLAY_MOVECOUNT_WEIDTH + PLAY_MOVE_WIDTH + PUFFER_SIZE * 2, 0, PLAY_MOVE_WIDTH + PUFFER_SIZE, moveCount * PLAY_MOVE_HEIGHT );
 
         scrollPane.setVerticalScrollBar( new JScrollBar( Adjustable.VERTICAL ) );
         scroll.setPreferredSize( new Dimension( 500, 2000 ) );
         scrollPane.getVerticalScrollBar().setValue( 1 );
-        scroll.setPreferredSize( new Dimension( PLAY_MOVE_WIDTH*2 + PLAY_MOVECOUNT_WEIDTH + +PUFFER_SIZE*3, moveCount * PLAY_MOVE_HEIGHT ) );
-        scrollPane.getVerticalScrollBar().setValue( scrollPane.getVerticalScrollBar().getMaximum());
+        scroll.setPreferredSize( new Dimension( PLAY_MOVE_WIDTH * 2 + PLAY_MOVECOUNT_WEIDTH + +PUFFER_SIZE * 3, moveCount * PLAY_MOVE_HEIGHT ) );
+        scrollPane.getVerticalScrollBar().setValue( scrollPane.getVerticalScrollBar().getMaximum() );
     }
 
     public DrawNotation()

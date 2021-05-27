@@ -130,7 +130,7 @@ public class DrawField extends JPanel
 
     public void move( Position from, Position to )
     {
-        GUI.notation.addPlayMove( from, to, getBoard().getCopy());
+        GUI.notation.addPlayMove( from, to, Board.createCopy( getBoard() ) );
         currentGameBoard.movePiece( from, to );
     }
 
@@ -230,7 +230,6 @@ public class DrawField extends JPanel
         Position end = Position.ofScreen( 7, 7 );
         start.iterateTo( end, forEach );
     }
-
 
 
     //Drag and Drop

@@ -24,6 +24,18 @@ public class ArrayUtil
         return newBoard;
     }
 
+    public static <T> void invertArray( T[] ranks )
+    {
+
+        for ( int i = 0; i < ranks.length / 2; i++ )
+        {
+            T temp = ranks[i];
+            ranks[i] = ranks[ranks.length - i - 1];
+            ranks[ranks.length - i - 1] = temp;
+        }
+
+    }
+
 }
 
 /***********************************************************************************************

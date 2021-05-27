@@ -31,6 +31,8 @@ public class Position implements Comparable<Position>
         return new Position( row, column );
     }
 
+    //example: c4
+    //not valid: 4c
     public static Position ofNotation( String notation )
     {
         char first = notation.charAt( 0 );
