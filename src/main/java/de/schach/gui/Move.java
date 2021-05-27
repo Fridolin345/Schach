@@ -148,7 +148,7 @@ public class Move
 
     public boolean whiteIsMoving()
     {
-        return ( beforeboard.getPiece( startPos ).getColor() == PieceColor.WHITE );
+        return ( beforeboard.pieceColorAt( startPos ) == PieceColor.WHITE );
     }
 
     public Vector getMoveVector()
