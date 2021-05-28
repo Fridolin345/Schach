@@ -150,7 +150,6 @@ public class BoardLogic
     }
 
 
-    //
     public boolean KingInCheck( PieceColor kingColor )
     {
         Set<Position> enemyMoves = getCoverage( kingColor.invert() );
@@ -161,8 +160,7 @@ public class BoardLogic
         return false;
     }
 
-
-        public Position getKing( PieceColor kingColor )
+    public Position getKing( PieceColor kingColor )
     {
         ArrayList<Position> allMyPieces = this.getAllPiecesForOneColor( kingColor );
         for ( Position p : allMyPieces )
@@ -183,17 +181,17 @@ public class BoardLogic
     public ArrayList<Position> getAllPiecesForOneColor( PieceColor pc )
     {
         ArrayList<Position> allPositions = new ArrayList<>();
-        for ( int row = 0; row < 8; row++ )
+        Board.TOP_LEFT_CORNER.iterateTo( Board.BOTTOM_RIGHT_CORNER, position ->
         {
-            for ( int col = 0; col < 8; col++ )
+            if ( this.board.isPieceAt( position ) )
             {
-                Piece temp = this.board.getPiece( new Position( row, col ) );
+                Piece temp = this.board.getPiece( position );
                 if ( temp.getColor() == pc )
                 {
-                    allPositions.add( new Position( row, col ) );
+                    allPositions.add( position );
                 }
             }
-        }
+        } );
         return allPositions;
     }
 

@@ -21,6 +21,5 @@ public class ChessGame
     private static void test()
     {
         //to do some tests
-        new PrintMyField( new Board() );
     }
 }
