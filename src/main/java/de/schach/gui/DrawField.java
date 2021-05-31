@@ -234,7 +234,6 @@ public class DrawField extends JPanel
         start.iterateTo( end, forEach );
     }
 
-
     //Drag and Drop
     private class DragListener extends MouseMotionAdapter
     {

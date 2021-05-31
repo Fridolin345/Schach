@@ -12,7 +12,7 @@ public class DrawNotation extends JPanel
 {
 
 
-    Border border = BorderFactory.createLineBorder(Color.red, 2);
+    Border border = BorderFactory.createLineBorder( Color.red, 2 );
 
     int moveCount = 0;
     ArrayList<Move> playNotationWhite = new ArrayList<>();
@@ -44,14 +44,14 @@ public class DrawNotation extends JPanel
         initScrollBar();
 
         JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setBounds( 0, 0, 600, 800 );
+        layeredPane.setPreferredSize( new Dimension( 600, 800 ) );
 
-        layeredPane.add( playScrollPane, Integer.valueOf( 1 ));
-        layeredPane.add(analysisScroll, Integer.valueOf( 0 ));
+        layeredPane.add( playScrollPane, Integer.valueOf( 1 ) );
+        layeredPane.add( analysisScroll, Integer.valueOf( 0 ) );
 
         this.setBounds( 0, 0, 600, 800 );
         this.add( playScrollPane );
-        this.setBackground( Color.BLUE );
+        //this.setBackground( Color.BLUE );
         this.setVisible( true );
     }
 
@@ -100,14 +100,14 @@ public class DrawNotation extends JPanel
         playBlackMoves.setBounds( PLAY_MOVECOUNT_WEIDTH + PLAY_MOVE_WIDTH + PUFFER_SIZE * 2, 0, PLAY_MOVE_WIDTH + PUFFER_SIZE, moveCount * PLAY_MOVE_HEIGHT );
 
         playScrollPane.revalidate();
-        playScroll.setPreferredSize( new Dimension( PLAY_MOVE_WIDTH*2 + PLAY_MOVECOUNT_WEIDTH + +PUFFER_SIZE*3, moveCount * PLAY_MOVE_HEIGHT ) );
-        playScrollPane.getVerticalScrollBar().setValue( playScrollPane.getVerticalScrollBar().getMaximum());
+        playScroll.setPreferredSize( new Dimension( PLAY_MOVE_WIDTH * 2 + PLAY_MOVECOUNT_WEIDTH + +PUFFER_SIZE * 3, moveCount * PLAY_MOVE_HEIGHT ) );
+        playScrollPane.getVerticalScrollBar().setValue( playScrollPane.getVerticalScrollBar().getMaximum() );
     }
 
 
-
-    public void updateAllPlayMoves(){
-
+    public void updateAllPlayMoves()
+    {
+        //TODO
     }
 
 
@@ -126,7 +126,7 @@ public class DrawNotation extends JPanel
         playScroll.add( playMoveCounter );
         playScroll.add( playWhiteMoves );
         playScroll.add( playBlackMoves );
-        playPanel.setBorder( border );
+        //playPanel.setBorder( border );
         playWhiteMoves.setLayout( new FlowLayout( 0, 0, 0 ) );
         playBlackMoves.setLayout( new FlowLayout( 0, 0, 0 ) );
         playMoveCounter.setLayout( new FlowLayout( 0, 0, 0 ) );

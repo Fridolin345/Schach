@@ -120,7 +120,7 @@ public class Move
 
         }
         acronym += endPos.toNotation();
-        if (getAfterBoard().getLogic().KingInCheck( startPiece.getColor().invert() ) )
+        if (getAfterBoard().getLogic().KingInCheck( startPiece.getColor().invert() ) ) //getCoverage wird nochnicht blockiert durch eigene Figuren, deswegen manchmal fälschlicher Weise "Schach"
         {
             acronym += "+";
         }

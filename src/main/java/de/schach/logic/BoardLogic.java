@@ -1,6 +1,7 @@
 package de.schach.logic;
 
 import de.schach.board.*;
+import de.schach.gui.PrintMyField;
 import de.schach.util.Debug;
 import de.schach.util.Vector;
 
@@ -152,6 +153,7 @@ public class BoardLogic
 
     public boolean KingInCheck( PieceColor kingColor )
     {
+        new PrintMyField(this.board);
         Set<Position> enemyMoves = getCoverage( kingColor.invert() );
         if ( enemyMoves.contains( getKing( kingColor ) ) )
         {
@@ -170,6 +172,7 @@ public class BoardLogic
             {
                 if ( temp.getColor() == kingColor )
                 {
+                    System.out.println(p);
                     return p;
                 }
             }
