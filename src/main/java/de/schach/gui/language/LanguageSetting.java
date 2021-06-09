@@ -17,7 +17,7 @@ public class LanguageSetting implements Setting<Language>
 
     private LanguageSetting()
     {
-        this.language = Language.de_DE;
+        this.language = Language.en_GB;
     }
 
     @Override
