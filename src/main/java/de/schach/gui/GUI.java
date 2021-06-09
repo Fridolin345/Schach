@@ -2,6 +2,7 @@ package de.schach.gui;
 
 import de.schach.board.Board;
 import de.schach.gui.buttons.*;
+import de.schach.gui.menu.FileMenu;
 import de.schach.util.Debug;
 
 import javax.swing.*;
@@ -159,64 +160,13 @@ public class GUI extends JFrame
         rightTopSidePanel.add( showMoreButton );
     }
 
-//    JButton initMyButton( String whatIsWished )
-//    {
-//        JButton myB = new JButton();
-//        myB.setBackground( Color.WHITE );
-//
-//
-//        switch ( whatIsWished.toLowerCase( Locale.ROOT ) )
-//        {
-//            case "play":
-//                myB.setText( "Play" );
-//                myB.addActionListener( PlayButton.getInstance() );
-//                break;
-//            case "analyse":
-//                myB.setText( "Analyse" );
-//                myB.addActionListener( new ActionListener()
-//                {
-//                    @Override
-//                    public void actionPerformed( ActionEvent e )
-//                    {
-//                        System.out.println( "analyse got pressed" );
-//                    }
-//                } );
-//                break;
-//            default:
-//                System.out.println( "Button konnte nicht geladen werden" );
-//                myB.setText( whatIsWished );
-//        }
-//        return myB;
-//    }
-
     void initMenuBar()
     {
         menuBar = new JMenuBar();
 
-        JMenu fileMenu = new JMenu( "File" );
-        JMenuItem openItem = new JMenuItem( "Open" );
-        JMenuItem openRecentlyItem = new JMenuItem( "Open Recently" );
-        JMenuItem saveItem = new JMenuItem( "Save" );
-        JMenuItem printItem = new JMenuItem( "Print" );
-        JMenuItem accountItem = new JMenuItem( "Account" );
-        JMenuItem exitItem = new JMenuItem( "Exit" );
-        fileMenu.add( openItem );
-        fileMenu.add( openRecentlyItem );
-        fileMenu.add( saveItem );
-        fileMenu.add( printItem );
-        fileMenu.add( accountItem );
-        fileMenu.add( exitItem );
-
-        JMenu loadMenu = new JMenu( "Load" );
-        JMenuItem loadfenItem = new JMenuItem( "Load from FEN" );
-        JMenuItem loadpgnItem = new JMenuItem( "Load from PGN" );
-        JMenuItem loadSettingdataItem = new JMenuItem( "Load Settingdata" );
-        loadMenu.add( loadfenItem );
-        loadMenu.add( loadpgnItem );
-        loadMenu.add( loadSettingdataItem );
-
         JMenu settingsMenu = new JMenu( "Settings" );
         JMenuItem allSettingsItem = new JMenuItem( "All Settings" );
+        JMenuItem accountItem = new JMenuItem( "Account" );
         JMenuItem engineSettingsItem = new JMenuItem( "Engine" );
         JMenuItem chessBoardItem = new JMenuItem( "Chessboard" );
         JMenuItem piecesItem = new JMenuItem( "Pieces" );
@@ -270,11 +220,10 @@ public class GUI extends JFrame
         helpMenu.add( aboutThisAppItem );
 
 
-        menuBar.add( fileMenu );
-        menuBar.add( loadMenu );
-        menuBar.add( settingsMenu );
+        menuBar.add( new FileMenu() );
         menuBar.add( engineMenu );
         menuBar.add( viewMenu );
+        menuBar.add( settingsMenu );
         menuBar.add( helpMenu );
 
         menuBar.setBackground( Color.WHITE );
