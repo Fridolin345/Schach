@@ -1,15 +1,14 @@
 package de.schach.gui;
 
 import de.schach.board.Board;
+import de.schach.gui.buttons.*;
+import de.schach.util.Debug;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class GUI extends JFrame
 {
@@ -30,7 +29,6 @@ public class GUI extends JFrame
     JPanel rightTopSidePanel; //Das Panel enthält buttonsPanel und den moreButton
     JPanel buttonsPanel;
     public static ArrayList<JButton> buttonsList;
-    public static ArrayList<String> buttonsStringList;
     public static Dimension prefferedButtonSize;
     public static DrawNotation notation;
     public static boolean buttonsPanelshowAll;
@@ -115,21 +113,19 @@ public class GUI extends JFrame
         showMoreButton.setBounds( (int) preferredRSSize.getWidth() - 50, 0, 50, prefferedButtonSize.height );
         showMoreButton.setBackground( Color.GRAY );
 
-        buttonsStringList = new ArrayList<>();
-        buttonsStringList.add( "Play" );
-        buttonsStringList.add( "Analyse" );
-        buttonsStringList.add( "A" );
-        buttonsStringList.add( "B" );
-        buttonsStringList.add( "C" );
-
         buttonsList = new ArrayList<>();
+        buttonsList.add( new PlayButton() );
+        buttonsList.add( new AnalyseButton() );
+        buttonsList.add( new LetterButton( 'A' ) );
+        buttonsList.add( new LetterButton( 'B' ) );
+        buttonsList.add( new LetterButton( 'C' ) );
 
         //Reihen und Spalten Anzahl festlegen:
         int colAmmount = (int) ( preferredRSSize.getWidth() / prefferedButtonSize.getWidth() );
         int rowAmmount = 0;
         if ( colAmmount > 1 )
         {
-            for ( int i = 0; i < buttonsStringList.size(); i += colAmmount )
+            for ( int i = 0; i < buttonsList.size(); i += colAmmount )
             {
                 rowAmmount++;
             }
@@ -138,19 +134,19 @@ public class GUI extends JFrame
         {
             rowAmmount = 1;
         }
-        System.out.println( "colAmmount: " + colAmmount + ",   rowAmmount: " + rowAmmount );
+        Debug.log( "colAmmount: " + colAmmount + ",   rowAmmount: " + rowAmmount );
 
         buttonsPanel = new JPanel();
         buttonsPanel.setBorder( b2 );
         buttonsPanel.setLayout( new GridLayout( rowAmmount, colAmmount ) );
         buttonsPanel.setBounds( 0, 0, (int) preferredRSSize.getWidth() - showMoreButton.getWidth(), (int) ( prefferedButtonSize.getHeight() * rowAmmount ) );
-        for ( int i = 0; i < buttonsStringList.size(); i++ )
+
+        for ( JButton button : buttonsList )
         {
-            JButton myB = initMyButton( buttonsStringList.get( i ) );
-            buttonsPanel.add( myB );
-            buttonsList.add( myB );
+            buttonsPanel.add( button );
         }
-        for ( int i = 0; i < ( colAmmount * rowAmmount - buttonsStringList.size() ); i++ )
+
+        for ( int i = 0; i < ( colAmmount * rowAmmount - buttonsList.size() ); i++ )
         {
             JButton temp = new JButton( "" );
             temp.setFocusable( false );
@@ -163,42 +159,35 @@ public class GUI extends JFrame
         rightTopSidePanel.add( showMoreButton );
     }
 
-    JButton initMyButton( String whatIsWished )
-    {
-        JButton myB = new JButton();
-        myB.setBackground( Color.WHITE );
-
-
-        switch ( whatIsWished.toLowerCase( Locale.ROOT ) )
-        {
-            case "play":
-                myB.setText( "Play" );
-                myB.addActionListener( new ActionListener()
-                {
-                    @Override
-                    public void actionPerformed( ActionEvent e )
-                    {
-                        System.out.println( "play got pressed" );
-                    }
-                } );
-                break;
-            case "analyse":
-                myB.setText( "Analyse" );
-                myB.addActionListener( new ActionListener()
-                {
-                    @Override
-                    public void actionPerformed( ActionEvent e )
-                    {
-                        System.out.println( "analyse got pressed" );
-                    }
-                } );
-                break;
-            default:
-                System.out.println( "Button konnte nicht geladen werden" );
-                myB.setText( whatIsWished );
-        }
-        return myB;
-    }
+//    JButton initMyButton( String whatIsWished )
+//    {
+//        JButton myB = new JButton();
+//        myB.setBackground( Color.WHITE );
+//
+//
+//        switch ( whatIsWished.toLowerCase( Locale.ROOT ) )
+//        {
+//            case "play":
+//                myB.setText( "Play" );
+//                myB.addActionListener( PlayButton.getInstance() );
+//                break;
+//            case "analyse":
+//                myB.setText( "Analyse" );
+//                myB.addActionListener( new ActionListener()
+//                {
+//                    @Override
+//                    public void actionPerformed( ActionEvent e )
+//                    {
+//                        System.out.println( "analyse got pressed" );
+//                    }
+//                } );
+//                break;
+//            default:
+//                System.out.println( "Button konnte nicht geladen werden" );
+//                myB.setText( whatIsWished );
+//        }
+//        return myB;
+//    }
 
     void initMenuBar()
     {
@@ -211,21 +200,21 @@ public class GUI extends JFrame
         JMenuItem printItem = new JMenuItem( "Print" );
         JMenuItem accountItem = new JMenuItem( "Account" );
         JMenuItem exitItem = new JMenuItem( "Exit" );
-        fileMenu.add(openItem);
-        fileMenu.add(openRecentlyItem);
-        fileMenu.add(saveItem);
-        fileMenu.add(printItem);
-        fileMenu.add(accountItem);
-        fileMenu.add(exitItem);
-        
+        fileMenu.add( openItem );
+        fileMenu.add( openRecentlyItem );
+        fileMenu.add( saveItem );
+        fileMenu.add( printItem );
+        fileMenu.add( accountItem );
+        fileMenu.add( exitItem );
+
         JMenu loadMenu = new JMenu( "Load" );
         JMenuItem loadfenItem = new JMenuItem( "Load from FEN" );
         JMenuItem loadpgnItem = new JMenuItem( "Load from PGN" );
         JMenuItem loadSettingdataItem = new JMenuItem( "Load Settingdata" );
-        loadMenu.add(loadfenItem);
-        loadMenu.add(loadpgnItem);
-        loadMenu.add(loadSettingdataItem);
-        
+        loadMenu.add( loadfenItem );
+        loadMenu.add( loadpgnItem );
+        loadMenu.add( loadSettingdataItem );
+
         JMenu settingsMenu = new JMenu( "Settings" );
         JMenuItem allSettingsItem = new JMenuItem( "All Settings" );
         JMenuItem engineSettingsItem = new JMenuItem( "Engine" );
@@ -242,7 +231,7 @@ public class GUI extends JFrame
         settingsMenu.add( chessBoardItem );
         settingsMenu.add( piecesItem );
         settingsMenu.add( fontsItem );
-        settingsMenu.add( themesItem);
+        settingsMenu.add( themesItem );
         settingsMenu.add( toolbuttonsItem );
         settingsMenu.add( menubarItem );
 
@@ -254,12 +243,11 @@ public class GUI extends JFrame
         //Create Own Engine? Vlt. dass man eigene Algorythmen erstellen kann
         //Combobox Show best moves?
         //Restore default Settings
-         engineMenu.add( analyseItem );
-         engineMenu.add( engineSettingsItem  );
-         engineMenu.add( gameReportItem );
-         engineMenu.add( vsEngineItem );
-         engineMenu.add( engineVSengineItem );
-
+        engineMenu.add( analyseItem );
+        engineMenu.add( engineSettingsItem );
+        engineMenu.add( gameReportItem );
+        engineMenu.add( vsEngineItem );
+        engineMenu.add( engineVSengineItem );
 
 
         JMenu viewMenu = new JMenu( "View" );
@@ -272,12 +260,12 @@ public class GUI extends JFrame
         viewMenu.add( themesItem );
         viewMenu.add( moveAnimation );
         viewMenu.add( organizeBoardGraphicItem );
-        
+
         JMenu helpMenu = new JMenu( "Help" );
         JMenuItem introductionGuideItem = new JMenuItem( "Introduction Guide" );
         JMenuItem learnChessItem = new JMenuItem( "Learn Chess" );
         JMenuItem aboutThisAppItem = new JMenuItem( "About this App" );
-        helpMenu.add( introductionGuideItem  );
+        helpMenu.add( introductionGuideItem );
         helpMenu.add( learnChessItem );
         helpMenu.add( aboutThisAppItem );
 

@@ -5,7 +5,6 @@ import de.schach.gui.PrintMyField;
 import de.schach.util.Debug;
 import de.schach.util.Vector;
 
-import javax.swing.plaf.metal.MetalIconFactory;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -134,8 +133,7 @@ public class BoardLogic
     private Set<Position> getCoverage( PieceColor color )
     {
         Set<Position> positions = new HashSet<>();
-        Position start = Board.TOP_LEFT_CORNER;
-        start.iterateTo( Board.BOTTOM_RIGHT_CORNER, pos ->
+        Board.TOP_LEFT_CORNER.iterateTo( Board.BOTTOM_RIGHT_CORNER, pos ->
         {
             if ( !board.isPieceAt( pos ) ) return;
             Piece piece = board.getPiece( pos );

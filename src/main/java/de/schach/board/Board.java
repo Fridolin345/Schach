@@ -2,10 +2,10 @@ package de.schach.board;
 
 import de.schach.exception.FenSyntaxException;
 import de.schach.logic.BoardLogic;
+import de.schach.util.Vector;
 import de.schach.util.*;
 
-import java.util.Arrays;
-import java.util.Scanner;
+import java.util.*;
 
 public class Board
 {
@@ -125,6 +125,21 @@ public class Board
         getLogic().postMoveChanges( piece, from, from.getDiff( to ) );
     }
 
+    public List<Position> getAllPiecesForOneColor( PieceColor pc )
+    {
+        ArrayList<Position> allPositions = new ArrayList<>();
+
+        Board.TOP_LEFT_CORNER.iterateTo( BOTTOM_RIGHT_CORNER, position ->
+        {
+            Piece temp = getPiece( position );
+            if ( temp.getColor() == pc )
+            {
+                allPositions.add( position );
+            }
+        } );
+        return allPositions;
+    }
+
     public PieceColor topColor()
     {
         return PieceColor.BLACK;
@@ -160,7 +175,7 @@ public class Board
         String squares = fen.substring( 0, fen.indexOf( ' ' ) );
         String data = fen.substring( fen.indexOf( ' ' ) + 1 );
 
-        String[] settings = data.split( " " ); //TODO later, just skip it currently
+        String[] settings = data.split( " " );
 
         //Who's turn
         boolean whitesTurn = settings[0].equalsIgnoreCase( "w" );
